@@ -1,0 +1,309 @@
+    <section class="module" id="module-5">
+
+      <!-- ── Screen 1: Intro ────────────────────────────────────────── -->
+      <div class="module-screen">
+        <div class="module-number">05</div>
+        <h2 class="module-title">Make It Your Own</h2>
+        <p class="module-subtitle">Panel visibility, colour themes, localStorage, and zero-code configuration</p>
+
+        <p style="margin-top: var(--space-6)">One of the cleverest things about this dashboard is how much users can customise without touching code — and how much you can configure without touching code either. This module explains the three layers of customisation.</p>
+
+        <div class="pattern-cards" style="margin-top: var(--space-6)">
+          <div class="pattern-card" style="border-top: 3px solid var(--color-actor-1)">
+            <div class="pattern-icon" style="background: var(--color-actor-1)">👤</div>
+            <h4 class="pattern-title">User preferences</h4>
+            <p class="pattern-desc">Panel visibility, colour theme, text size — saved per device in localStorage</p>
+          </div>
+          <div class="pattern-card" style="border-top: 3px solid var(--color-actor-2)">
+            <div class="pattern-icon" style="background: var(--color-actor-2)">⚙️</div>
+            <h4 class="pattern-title">Operator config</h4>
+            <p class="pattern-desc">Org name, colours, Discourse URL, API keys — set via environment variables</p>
+          </div>
+          <div class="pattern-card" style="border-top: 3px solid var(--color-actor-3)">
+            <div class="pattern-icon" style="background: var(--color-actor-3)">📢</div>
+            <h4 class="pattern-title">Announcements</h4>
+            <p class="pattern-desc">Priority banners — edited by changing a JSON file on GitHub, no code needed</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Screen 2: localStorage ──────────────────────────────────── -->
+      <div class="module-screen">
+        <h3 class="screen-title">localStorage: your browser's sticky note pad</h3>
+        <p><span class="term" data-definition="localStorage is a small storage space in your browser — like a sticky note on your computer. JavaScript can read and write key-value pairs there. The data persists across sessions and page refreshes, but only for that browser on that device. It's not synced to the server.">localStorage</span> is how the dashboard remembers your preferences. No account required. No server round-trip. Everything stays on your device.</p>
+
+        <div class="badge-list" style="margin-top: var(--space-6)">
+          <div class="badge-item">
+            <code class="badge-code">panel-visibility-v1</code>
+            <span class="badge-desc">Which of the 8 panels you have switched on or off</span>
+          </div>
+          <div class="badge-item">
+            <code class="badge-code">dash-color-theme</code>
+            <span class="badge-desc">Your chosen colour theme: coffee, forest, tokyo, or dyslexic</span>
+          </div>
+          <div class="badge-item">
+            <code class="badge-code">dash-font-size</code>
+            <span class="badge-desc">Your text size preference: 16px, 18px, or 20px</span>
+          </div>
+          <div class="badge-item">
+            <code class="badge-code">announcement-dismissed-{hash}</code>
+            <span class="badge-desc">Whether you dismissed a particular announcement (keyed by content hash)</span>
+          </div>
+        </div>
+
+        <div class="callout callout-info" style="margin-top: var(--space-6)">
+          <div class="callout-icon">💡</div>
+          <div class="callout-content">
+            <strong class="callout-title">The version number trick</strong>
+            <p>Notice <code>panel-visibility-v1</code> has a version number. When the developer changes the default panels, they bump it to <code>panel-visibility-v2</code>. Existing users' saved preferences are ignored — they get a clean start with the new defaults. This is a standard pattern for breaking changes in user-facing storage.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Screen 3: Panel Visibility Code ────────────────────────── -->
+      <div class="module-screen">
+        <h3 class="screen-title">How panel toggling actually works</h3>
+        <p>When you click a panel toggle in the sidebar, here's what happens. The magic is <code>v-if</code> — panels that are off are completely removed from the browser, not just hidden.</p>
+
+        <div class="translation-block animate-in">
+          <div class="translation-code">
+            <span class="translation-label">CODE — app/composables/usePanelVisibility.ts</span>
+            <pre><code>
+<span class="code-line"><span class="code-keyword">function</span> <span class="code-function">toggle</span>(id: PanelId) {</span>
+<span class="code-line">  <span class="code-keyword">const</span> currentlyOn = visibility.value[id]</span>
+<span class="code-line">  <span class="code-keyword">if</span> (currentlyOn && !<span class="code-function">canToggleOff</span>(id))</span>
+<span class="code-line">    <span class="code-keyword">return</span></span>
+<span class="code-line"></span>
+<span class="code-line">  visibility.value = {</span>
+<span class="code-line">    ...visibility.value,</span>
+<span class="code-line">    [id]: !currentlyOn</span>
+<span class="code-line">  }</span>
+<span class="code-line">  <span class="code-function">saveToStorage</span>(visibility.value)</span>
+<span class="code-line">}</span>
+            </code></pre>
+          </div>
+          <div class="translation-english">
+            <span class="translation-label">PLAIN ENGLISH</span>
+            <div class="translation-lines">
+              <p class="tl">Function to toggle one panel on or off.</p>
+              <p class="tl">Check if the panel is currently on.</p>
+              <p class="tl">If it's on, and turning it off would leave fewer than 5 panels…</p>
+              <p class="tl">…stop. The minimum is enforced, no error thrown.</p>
+              <p class="tl"> </p>
+              <p class="tl">Otherwise, create a new state object.</p>
+              <p class="tl">Copy all current on/off values (the ... spread)…</p>
+              <p class="tl">…but flip this panel's value to the opposite of what it was.</p>
+              <p class="tl">Immediately save to localStorage so it persists after a refresh.</p>
+              <p class="tl"> </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="callout callout-accent" style="margin-top: var(--space-6)">
+          <div class="callout-icon">💡</div>
+          <div class="callout-content">
+            <strong class="callout-title">v-if vs v-show — a critical difference</strong>
+            <p><code>v-if="false"</code> completely removes the element from the browser — as if it never existed. No API calls fire, no SSE updates are processed. <code>v-show="false"</code> just hides it with CSS but the code still runs. The dashboard uses <code>v-if</code> deliberately — turning off a panel genuinely stops all background activity for it. This is the right call for performance.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Screen 4: Colour Themes ────────────────────────────────── -->
+      <div class="module-screen">
+        <h3 class="screen-title">Four colour themes — loaded on demand</h3>
+        <p>The "Your Style" panel offers four colour themes. Most are just CSS — but the Dyslexic theme has a clever trick: it loads the OpenDyslexic font <em>only</em> when selected, rather than adding it to every page load.</p>
+
+        <div class="translation-block animate-in">
+          <div class="translation-code">
+            <span class="translation-label">CODE — app/composables/useColorTheme.ts</span>
+            <pre><code>
+<span class="code-line"><span class="code-keyword">function</span> <span class="code-function">applyTheme</span>(theme: ColorThemeName) {</span>
+<span class="code-line">  <span class="code-keyword">const</span> html = document.documentElement</span>
+<span class="code-line">  <span class="code-keyword">if</span> (theme === <span class="code-string">'coffee'</span>) {</span>
+<span class="code-line">    html.<span class="code-function">removeAttribute</span>(<span class="code-string">'data-color-theme'</span>)</span>
+<span class="code-line">  } <span class="code-keyword">else</span> {</span>
+<span class="code-line">    html.<span class="code-function">setAttribute</span>(</span>
+<span class="code-line">      <span class="code-string">'data-color-theme'</span>, theme</span>
+<span class="code-line">    )</span>
+<span class="code-line">  }</span>
+<span class="code-line">  <span class="code-keyword">if</span> (theme === <span class="code-string">'dyslexic'</span>) {</span>
+<span class="code-line">    <span class="code-function">loadDyslexicFont</span>()</span>
+<span class="code-line">  }</span>
+<span class="code-line">}</span>
+            </code></pre>
+          </div>
+          <div class="translation-english">
+            <span class="translation-label">PLAIN ENGLISH</span>
+            <div class="translation-lines">
+              <p class="tl">Function that switches the colour theme.</p>
+              <p class="tl">Get the root HTML element — the entire page hangs off this.</p>
+              <p class="tl">If the theme is "coffee" (the default)…</p>
+              <p class="tl">…remove any theme attribute — CSS defaults take over.</p>
+              <p class="tl">For any other theme…</p>
+              <p class="tl">…stamp a data-color-theme attribute on the HTML tag.</p>
+              <p class="tl">CSS rules like [data-color-theme="forest"] { ... } then kick in.</p>
+              <p class="tl"> </p>
+              <p class="tl">Special case: if Dyslexic is chosen…</p>
+              <p class="tl">…load the OpenDyslexic font from an external CDN — only now, on demand.</p>
+              <p class="tl"> </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="callout callout-info" style="margin-top: var(--space-4)">
+          <div class="callout-icon">💡</div>
+          <div class="callout-content">
+            <strong class="callout-title">Lazy loading — load things only when needed</strong>
+            <p><span class="term" data-definition="Lazy loading means delaying the loading of a resource until it's actually needed. The opposite is eager loading — loading everything upfront. Lazy loading makes pages load faster by not downloading things most users will never use.">Lazy loading</span> the font means most users (99%+ won't choose the Dyslexic theme) never download it. This is a good pattern to ask AI for: "only load this resource when the user activates this feature."</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Screen 5: The Priority Announcement Banner ──────────────── -->
+      <div class="module-screen">
+        <h3 class="screen-title">The priority announcement banner</h3>
+        <p>There's a special panel that bypasses all user preferences — the Priority Announcement Banner. It's for genuine emergencies. An organiser can post one by editing a single JSON file on GitHub.</p>
+
+        <div class="pattern-cards" style="margin-top: var(--space-4)">
+          <div class="pattern-card" style="border-top: 3px solid #3B82F6">
+            <div class="pattern-icon" style="background: #3B82F6">ℹ️</div>
+            <h4 class="pattern-title">info</h4>
+            <p class="pattern-desc">Blue banner. Dismissable — user can close it. Reappears if content changes.</p>
+          </div>
+          <div class="pattern-card" style="border-top: 3px solid #F59E0B">
+            <div class="pattern-icon" style="background: #F59E0B">⚠️</div>
+            <h4 class="pattern-title">warning</h4>
+            <p class="pattern-desc">Amber banner. Dismissable, same as info.</p>
+          </div>
+          <div class="pattern-card" style="border-top: 3px solid #EF4444">
+            <div class="pattern-icon" style="background: #EF4444">🚨</div>
+            <h4 class="pattern-title">urgent</h4>
+            <p class="pattern-desc">Red banner. <strong>Not dismissable</strong> — stays until the operator sets enabled: false.</p>
+          </div>
+        </div>
+
+        <div class="callout callout-accent" style="margin-top: var(--space-6)">
+          <div class="callout-icon">🔑</div>
+          <div class="callout-content">
+            <strong class="callout-title">The dismiss hash trick</strong>
+            <p>If a user dismissed an announcement, the dashboard stores a <span class="term" data-definition="A hash is a short, fixed-length fingerprint of some data. Same input always gives the same output. Change even one character of the input and you get a completely different output. Used here to detect when announcement content has changed.">hash</span> of its content in localStorage. If the announcement text changes, the hash changes — and the "dismissed" record no longer matches, so the banner reappears for everyone who had dismissed the previous version. Smart!</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Screen 6: Zero-Code Config + Quiz ──────────────────────── -->
+      <div class="module-screen">
+        <h3 class="screen-title">Zero-code configuration</h3>
+        <p>The whole dashboard is designed to be deployed by non-engineers. All visible content — org name, colours, Discourse URL, API keys — is controlled by environment variables. No code changes needed to brand it for a new organisation.</p>
+
+        <div class="file-tree" style="margin-top: var(--space-4)">
+          <div class="ft-file">
+            <span class="ft-name">.env.example</span>
+            <span class="ft-desc">Copy this to .env and fill in your values — the full reference</span>
+          </div>
+          <div class="ft-file">
+            <span class="ft-name">app/app.config.ts</span>
+            <span class="ft-desc">Header image + sidebar logo — the two things that need build-time config</span>
+          </div>
+          <div class="ft-file">
+            <span class="ft-name">server/data/announcement.json</span>
+            <span class="ft-desc">Edit directly on GitHub to post a priority announcement — no deploy command needed</span>
+          </div>
+        </div>
+
+        <div class="quiz-container" id="quiz-module5" style="margin-top: var(--space-8)">
+          <div class="quiz-question-block"
+               data-correct="option-c"
+               data-explanation-right="Correct. v-if removes the element entirely — no API calls, no SSE processing, no DOM. It genuinely stops that panel from doing anything, which is more efficient than just hiding it with CSS."
+               data-explanation-wrong="Think about the difference between v-if and v-show. One hides, the other removes. Which is which?">
+            <h3 class="quiz-question">You turn off the Videos panel in the sidebar. The YouTube API route — does it still run?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" onclick="selectOption(this)">
+                <div class="quiz-option-radio"></div>
+                <span>Yes — the panel is hidden with CSS but the API call still happens in the background</span>
+              </button>
+              <button class="quiz-option" data-value="option-b" onclick="selectOption(this)">
+                <div class="quiz-option-radio"></div>
+                <span>Yes — SSE still pushes YouTube data to the browser, it just doesn't display it</span>
+              </button>
+              <button class="quiz-option" data-value="option-c" onclick="selectOption(this)">
+                <div class="quiz-option-radio"></div>
+                <span>No — the v-if removes the component entirely, so no API call fires and no SSE update is processed</span>
+              </button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+
+          <div class="quiz-question-block"
+               data-correct="option-b"
+               data-explanation-right="Right. You can fork the repo, set your org name, Discourse URL, and API key in Netlify's environment variables, and have a fully branded dashboard — without changing a single line of code."
+               data-explanation-wrong="Think about what environment variables are for — they separate configuration from code so the same code can run in different contexts.">
+            <h3 class="quiz-question">A new organisation wants to deploy this dashboard for their own community. What do they need to change in the code?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" onclick="selectOption(this)">
+                <div class="quiz-option-radio"></div>
+                <span>They need to edit the panel components to change the org name and links throughout</span>
+              </button>
+              <button class="quiz-option" data-value="option-b" onclick="selectOption(this)">
+                <div class="quiz-option-radio"></div>
+                <span>Nothing — they just set their own environment variables in Netlify and the same code works</span>
+              </button>
+              <button class="quiz-option" data-value="option-c" onclick="selectOption(this)">
+                <div class="quiz-option-radio"></div>
+                <span>They need to fork the code and rewrite the API routes for their specific services</span>
+              </button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+
+          <button class="quiz-check-btn" onclick="checkQuiz('quiz-module5')">Check Answers</button>
+          <button class="quiz-reset-btn" onclick="resetQuiz('quiz-module5')">Try Again</button>
+        </div>
+      </div>
+
+      <!-- ── Screen 7: What You Now Know ───────────────────────────── -->
+      <div class="module-screen">
+        <h3 class="screen-title">What you can do with this knowledge</h3>
+        <p>You've just learned the full architecture of a production-grade real-time web application. Here's how it makes you a better AI director:</p>
+
+        <div class="step-cards" style="margin-top: var(--space-6)">
+          <div class="step-card">
+            <div class="step-num">→</div>
+            <div class="step-body">
+              <strong>"Add a new panel for Mastodon"</strong>
+              <p>You know: create a new API route in server/api/, a new Vue component in app/components/panels/, add it to usePanelVisibility.ts, and wire up the SSE event in index.vue.</p>
+            </div>
+          </div>
+          <div class="step-card">
+            <div class="step-num">→</div>
+            <div class="step-body">
+              <strong>"The Discourse panel is slow"</strong>
+              <p>You know: check the cache TTL in discourse/latest.get.ts. Is it set too low? Is the Discourse server slow to respond? Is the cache being cleared too aggressively?</p>
+            </div>
+          </div>
+          <div class="step-card">
+            <div class="step-num">→</div>
+            <div class="step-body">
+              <strong>"Can we sync prefs across devices?"</strong>
+              <p>You know: right now preferences are in localStorage (per device). To sync, you'd need to store them server-side — either in Discourse user preferences or a simple database.</p>
+            </div>
+          </div>
+          <div class="step-card">
+            <div class="step-num">→</div>
+            <div class="step-body">
+              <strong>"Why does the live dot go grey sometimes?"</strong>
+              <p>You know: that's useSSEConnected() responding to an EventSource error. The browser auto-reconnects — but you could add a retry counter and alert if it fails more than N times.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="callout callout-accent" style="margin-top: var(--space-8)">
+          <div class="callout-icon">🎓</div>
+          <div class="callout-content">
+            <strong class="callout-title">You've covered a lot of ground</strong>
+            <p>SSR, SSE, in-memory caching, event bus broadcasting, REST APIs with bearer token auth, localStorage, v-if component lifecycle, lazy font loading, and zero-code configuration via environment variables. These aren't just features of this dashboard — they're patterns you'll find in almost every modern web application. You now know how to talk about all of them precisely.</p>
+          </div>
+        </div>
+      </div>
+
+    </section>

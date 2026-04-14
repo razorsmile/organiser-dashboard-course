@@ -1,0 +1,267 @@
+    <section class="module" id="module-4">
+
+      <!-- ── Screen 1: The Source of Truth ──────────────────────────── -->
+      <div class="module-screen">
+        <div class="module-number">04</div>
+        <h2 class="module-title">Discourse as the Backbone</h2>
+        <p class="module-subtitle">Why one forum becomes the source of truth for everything</p>
+
+        <p style="margin-top: var(--space-6)">Most dashboards keep data in a separate database. This one doesn't. Instead, <span class="term" data-definition="Discourse is an open-source forum platform — like Reddit but self-hosted and fully controlled by your organisation. It has categories, topics, posts, tags, and a full REST API.">Discourse</span> serves as the <span class="term" data-definition="A single source of truth is one definitive place where data lives. Every other system reads from it. This prevents the problem of having the same data in two places that drift out of sync.">single source of truth</span> for almost all written content in the dashboard.</p>
+
+        <div class="icon-rows" style="margin-top: var(--space-6)">
+          <div class="icon-row">
+            <div class="icon-circle" style="background: var(--color-actor-1)">🗣️</div>
+            <div>
+              <strong>Discussions panel</strong>
+              <p>Reads from Discourse categories you configure — shows latest topics with excerpts, reply counts, and timestamps.</p>
+            </div>
+          </div>
+          <div class="icon-row">
+            <div class="icon-circle" style="background: var(--color-actor-2)">📌</div>
+            <div>
+              <strong>Announcements (Pinboard) panel</strong>
+              <p>Reads from a special Discourse category — AND can write back to it, creating real Discourse topics when you post an announcement.</p>
+            </div>
+          </div>
+          <div class="icon-row">
+            <div class="icon-circle" style="background: var(--color-actor-3)">📅</div>
+            <div>
+              <strong>Meetings panel</strong>
+              <p>Reads from a separate Discourse category designated for meeting notes and agendas.</p>
+            </div>
+          </div>
+          <div class="icon-row">
+            <div class="icon-circle" style="background: var(--color-actor-4)">📄</div>
+            <div>
+              <strong>Key Docs panel</strong>
+              <p>Reads from yet another Discourse category — for reference documents and policies.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Screen 2: Why Discourse ─────────────────────────────────── -->
+      <div class="module-screen">
+        <h3 class="screen-title">Why not just use a database?</h3>
+
+        <div class="callout callout-accent" style="margin-top: var(--space-2)">
+          <div class="callout-icon">🏛️</div>
+          <div class="callout-content">
+            <strong class="callout-title">Discourse is a database — with superpowers</strong>
+            <p>A traditional database is just storage. Discourse gives you storage <em>plus</em> moderation tools, search, notifications, user accounts, edit history, and an existing community already living there. Why build all that from scratch?</p>
+          </div>
+        </div>
+
+        <div class="step-cards" style="margin-top: var(--space-6)">
+          <div class="step-card">
+            <div class="step-num">✓</div>
+            <div class="step-body">
+              <strong>Everything is auditable</strong>
+              <p>Every announcement, meeting note, and key doc has a full edit history in Discourse. Who wrote it, when, and what changed.</p>
+            </div>
+          </div>
+          <div class="step-card">
+            <div class="step-num">✓</div>
+            <div class="step-body">
+              <strong>Moderation is built in</strong>
+              <p>Discourse has user roles, category permissions, and spam protection. The dashboard inherits all of that for free.</p>
+            </div>
+          </div>
+          <div class="step-card">
+            <div class="step-num">✓</div>
+            <div class="step-body">
+              <strong>Self-hosted and open-source</strong>
+              <p>Unlike Slack or Notion, Discourse can run on your own server. Your organisation owns all its data.</p>
+            </div>
+          </div>
+          <div class="step-card">
+            <div class="step-num">✓</div>
+            <div class="step-body">
+              <strong>The dashboard degrades gracefully</strong>
+              <p>If Discourse isn't configured, every panel falls back to realistic mock data. Nothing breaks — it just shows example content.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Screen 3: The Discourse Request Helper ──────────────────── -->
+      <div class="module-screen">
+        <h3 class="screen-title">How Nitro talks to Discourse</h3>
+        <p>Every API route that needs Discourse data goes through a shared helper function in <code>server/utils/discourse.ts</code>. This keeps credentials in one place and makes every API call consistent.</p>
+
+        <div class="translation-block animate-in">
+          <div class="translation-code">
+            <span class="translation-label">CODE — server/utils/discourse.ts</span>
+            <pre><code>
+<span class="code-line"><span class="code-keyword">export async function</span> <span class="code-function">discourseRequest</span>&lt;T&gt;(</span>
+<span class="code-line">  path: <span class="code-keyword">string</span>,</span>
+<span class="code-line">  method = <span class="code-string">'GET'</span></span>
+<span class="code-line">) {</span>
+<span class="code-line">  <span class="code-keyword">const</span> config = <span class="code-function">useRuntimeConfig</span>()</span>
+<span class="code-line">  <span class="code-keyword">const</span> url = <span class="code-keyword">new</span> <span class="code-function">URL</span>(path, config.discourseUrl)</span>
+<span class="code-line">  <span class="code-keyword">const</span> headers = {</span>
+<span class="code-line">    <span class="code-string">'Api-Key'</span>: config.discourseApiKey,</span>
+<span class="code-line">    <span class="code-string">'Api-Username'</span>: config.discourseApiUsername</span>
+<span class="code-line">  }</span>
+<span class="code-line">  <span class="code-keyword">return await</span> <span class="code-function">$fetch</span>&lt;T&gt;(url.<span class="code-function">toString</span>(), {</span>
+<span class="code-line">    method, headers, timeout: <span class="code-number">8000</span></span>
+<span class="code-line">  })</span>
+<span class="code-line">}</span>
+            </code></pre>
+          </div>
+          <div class="translation-english">
+            <span class="translation-label">PLAIN ENGLISH</span>
+            <div class="translation-lines">
+              <p class="tl">A reusable function that makes one HTTP request to Discourse.</p>
+              <p class="tl">You provide a path like /c/5/l/latest.json…</p>
+              <p class="tl">…and optionally the method (GET by default).</p>
+              <p class="tl"> </p>
+              <p class="tl">Pull the server-side config (env vars, invisible to the browser).</p>
+              <p class="tl">Build the full URL by combining the Discourse base URL + the path.</p>
+              <p class="tl">Prepare the authentication headers — the API key and username.</p>
+              <p class="tl">These prove to Discourse that this request is from an authorised source.</p>
+              <p class="tl"> </p>
+              <p class="tl">Make the HTTP request and wait for the response.</p>
+              <p class="tl">Give up after 8 seconds if Discourse doesn't respond.</p>
+              <p class="tl"> </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Screen 4: The Pinboard Write-Back ──────────────────────── -->
+      <div class="module-screen">
+        <h3 class="screen-title">Writing back: the Pinboard</h3>
+        <p>The Pinboard (Announcements) panel is special — it's the only panel that can <em>write</em> data, not just read it. When an organiser posts a new announcement, the dashboard creates a real Discourse topic in the designated category.</p>
+
+        <div class="chat-window" id="chat-module4">
+          <div class="chat-messages">
+            <div class="chat-message" data-msg="0" data-sender="organiser" style="display:none">
+              <div class="chat-avatar" style="background: var(--color-actor-1)">👤</div>
+              <div class="chat-bubble">
+                <span class="chat-sender" style="color: var(--color-actor-1)">Organiser</span>
+                <p>POST /api/pinboard with body: "Urgent: volunteers needed Saturday"</p>
+              </div>
+            </div>
+            <div class="chat-message" data-msg="1" data-sender="nitro" style="display:none">
+              <div class="chat-avatar" style="background: var(--color-actor-2)">⚡</div>
+              <div class="chat-bubble">
+                <span class="chat-sender" style="color: var(--color-actor-2)">Nitro Server</span>
+                <p>Checking the Authorization header… Bearer token matches NUXT_PINBOARD_SECRET ✓</p>
+              </div>
+            </div>
+            <div class="chat-message" data-msg="2" data-sender="nitro" style="display:none">
+              <div class="chat-avatar" style="background: var(--color-actor-2)">⚡</div>
+              <div class="chat-bubble">
+                <span class="chat-sender" style="color: var(--color-actor-2)">Nitro Server</span>
+                <p>Sending POST to Discourse: create topic in pinboard category #5…</p>
+              </div>
+            </div>
+            <div class="chat-message" data-msg="3" data-sender="discourse" style="display:none">
+              <div class="chat-avatar" style="background: var(--color-actor-3)">🗣️</div>
+              <div class="chat-bubble">
+                <span class="chat-sender" style="color: var(--color-actor-3)">Discourse</span>
+                <p>Topic created! ID: 12345. It's live in the forum now.</p>
+              </div>
+            </div>
+            <div class="chat-message" data-msg="4" data-sender="nitro" style="display:none">
+              <div class="chat-avatar" style="background: var(--color-actor-2)">⚡</div>
+              <div class="chat-bubble">
+                <span class="chat-sender" style="color: var(--color-actor-2)">Nitro Server</span>
+                <p>Cache cleared. Re-fetching pinboard… emitting to event bus… SSE broadcasting to all browsers.</p>
+              </div>
+            </div>
+            <div class="chat-message" data-msg="5" data-sender="browser" style="display:none">
+              <div class="chat-avatar" style="background: var(--color-actor-4)">🌐</div>
+              <div class="chat-bubble">
+                <span class="chat-sender" style="color: var(--color-actor-4)">All Browsers</span>
+                <p>New announcement appearing in the Pinboard panel for everyone — instantly!</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="chat-typing" style="display:none">
+            <div class="chat-avatar">?</div>
+            <div class="chat-typing-dots">
+              <span class="typing-dot"></span>
+              <span class="typing-dot"></span>
+              <span class="typing-dot"></span>
+            </div>
+          </div>
+
+          <div class="chat-controls">
+            <button class="btn chat-next-btn">Next Message</button>
+            <button class="btn chat-all-btn">Play All</button>
+            <button class="btn chat-reset-btn">Replay</button>
+            <span class="chat-progress"></span>
+          </div>
+        </div>
+
+        <div class="callout callout-info" style="margin-top: var(--space-6)">
+          <div class="callout-icon">🔑</div>
+          <div class="callout-content">
+            <strong class="callout-title">Authentication with a bearer token</strong>
+            <p>The pinboard API is protected with a <span class="term" data-definition="A bearer token is a secret password sent in the Authorization header of an HTTP request. 'Bearer' just means 'whoever has this token is authorized.' Like a wristband at a venue — whoever wears it gets in.">bearer token</span>. The <code>NUXT_PINBOARD_SECRET</code> env var holds the secret — you generate it with <code>openssl rand -hex 32</code>. No token, no write access.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Screen 5: Quiz ─────────────────────────────────────────── -->
+      <div class="module-screen">
+        <h3 class="screen-title">Check your understanding</h3>
+
+        <div class="quiz-container" id="quiz-module4">
+          <div class="quiz-question-block"
+               data-correct="option-c"
+               data-explanation-right="Exactly. The dashboard is a thin layer on top of Discourse. The actual content lives in Discourse — the dashboard just surfaces and displays it. This means you get Discourse moderation, search, and history for free."
+               data-explanation-wrong="Think about where announcements and discussions actually live — which system stores them long-term?">
+            <h3 class="quiz-question">An organiser posts a new announcement through the dashboard. Where is the announcement actually stored?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" onclick="selectOption(this)">
+                <div class="quiz-option-radio"></div>
+                <span>In a database that the dashboard manages directly</span>
+              </button>
+              <button class="quiz-option" data-value="option-b" onclick="selectOption(this)">
+                <div class="quiz-option-radio"></div>
+                <span>In the server's in-memory cache</span>
+              </button>
+              <button class="quiz-option" data-value="option-c" onclick="selectOption(this)">
+                <div class="quiz-option-radio"></div>
+                <span>As a Discourse topic in the configured pinboard category</span>
+              </button>
+              <button class="quiz-option" data-value="option-d" onclick="selectOption(this)">
+                <div class="quiz-option-radio"></div>
+                <span>In a local JSON file on the server</span>
+              </button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+
+          <div class="quiz-question-block"
+               data-correct="option-b"
+               data-explanation-right="Right. The API key goes in environment variables, not in code. Code is often public (version control, CI logs). Secrets in code are the #1 source of security incidents."
+               data-explanation-wrong="Think about what would happen if the API key were in the source code — if the code is on GitHub, anyone can see it.">
+            <h3 class="quiz-question">The dashboard needs a Discourse API key. Where should it be stored?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" onclick="selectOption(this)">
+                <div class="quiz-option-radio"></div>
+                <span>Directly in discourse.ts — it's server-only code so it's safe</span>
+              </button>
+              <button class="quiz-option" data-value="option-b" onclick="selectOption(this)">
+                <div class="quiz-option-radio"></div>
+                <span>In environment variables (NUXT_DISCOURSE_API_KEY) set in Netlify's dashboard, never in code</span>
+              </button>
+              <button class="quiz-option" data-value="option-c" onclick="selectOption(this)">
+                <div class="quiz-option-radio"></div>
+                <span>In a config file committed to the repository</span>
+              </button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+
+          <button class="quiz-check-btn" onclick="checkQuiz('quiz-module4')">Check Answers</button>
+          <button class="quiz-reset-btn" onclick="resetQuiz('quiz-module4')">Try Again</button>
+        </div>
+      </div>
+
+    </section>

@@ -1,0 +1,257 @@
+    <section class="module" id="module-3">
+
+      <!-- ── Screen 1: The Problem with Polling ─────────────────────── -->
+      <div class="module-screen">
+        <div class="module-number">03</div>
+        <h2 class="module-title">Always Fresh</h2>
+        <p class="module-subtitle">The live update engine — SSE, caching, and the event bus</p>
+
+        <p style="margin-top: var(--space-6)">Most dashboards get "live" data the lazy way: they ask the server for new data every 30 seconds. This is called <span class="term" data-definition="Polling means the browser repeatedly asks the server: 'anything new? anything new? anything new?' — on a timer. It works but it's wasteful — most of the time the answer is no, and you've wasted a round trip.">polling</span>, and it's expensive and slow.</p>
+
+        <div class="callout callout-accent" style="margin-top: var(--space-6)">
+          <div class="callout-icon">📻</div>
+          <div class="callout-content">
+            <strong class="callout-title">The radio station model</strong>
+            <p>This dashboard works like a radio station instead. The server <em>broadcasts</em> updates when it has something new. The browser just listens. No constant nagging. The moment data changes, every connected browser gets it simultaneously — without asking.</p>
+          </div>
+        </div>
+
+        <p style="margin-top: var(--space-6)">This is achieved with three interlocking systems: the <strong>SSE stream</strong>, the <strong>in-memory cache</strong>, and the <strong>event bus</strong>. Let's look at each one.</p>
+      </div>
+
+      <!-- ── Screen 2: The Cache ─────────────────────────────────────── -->
+      <div class="module-screen">
+        <h3 class="screen-title">System 1: The in-memory cache</h3>
+        <p>Every API route has its own <span class="term" data-definition="A cache is a temporary storage of a result so you don't have to compute or fetch it again. Like keeping leftovers in the fridge — instead of cooking from scratch every time, you reheat what's already there.">cache</span>. When Nitro fetches data from Discourse, it stores the result in memory with a timer. If another request comes in before the timer expires, it returns the cached copy instead of calling Discourse again.</p>
+
+        <div class="translation-block animate-in">
+          <div class="translation-code">
+            <span class="translation-label">CODE — server/utils/cache.ts</span>
+            <pre><code>
+<span class="code-line"><span class="code-keyword">export function</span> <span class="code-function">createCache</span>&lt;T&gt;(ttlMs: <span class="code-keyword">number</span>) {</span>
+<span class="code-line">  <span class="code-keyword">let</span> data: T | <span class="code-keyword">null</span> = <span class="code-keyword">null</span></span>
+<span class="code-line">  <span class="code-keyword">let</span> timestamp: <span class="code-keyword">number</span> | <span class="code-keyword">null</span> = <span class="code-keyword">null</span></span>
+<span class="code-line">  <span class="code-keyword">return</span> {</span>
+<span class="code-line">    <span class="code-function">isFresh</span>() {</span>
+<span class="code-line">      <span class="code-keyword">return</span> data !== <span class="code-keyword">null</span> &&</span>
+<span class="code-line">        (Date.<span class="code-function">now</span>() - timestamp!) &lt; ttlMs</span>
+<span class="code-line">    },</span>
+<span class="code-line">    <span class="code-function">get</span>() { <span class="code-keyword">return</span> data },</span>
+<span class="code-line">    <span class="code-function">set</span>(val: T) {</span>
+<span class="code-line">      data = val</span>
+<span class="code-line">      timestamp = Date.<span class="code-function">now</span>()</span>
+<span class="code-line">    }</span>
+<span class="code-line">  }</span>
+<span class="code-line">}</span>
+            </code></pre>
+          </div>
+          <div class="translation-english">
+            <span class="translation-label">PLAIN ENGLISH</span>
+            <div class="translation-lines">
+              <p class="tl">Create a cache that holds data of type T for ttlMs milliseconds.</p>
+              <p class="tl">The data holder — starts empty.</p>
+              <p class="tl">The timestamp — when we last filled it.</p>
+              <p class="tl">Return a small toolkit with three tools:</p>
+              <p class="tl">isFresh: Is the data still good? Check if we have data…</p>
+              <p class="tl">…and if it's younger than the expiry time.</p>
+              <p class="tl"> </p>
+              <p class="tl">get: Just hand back whatever's stored.</p>
+              <p class="tl">set: Store new data and record the current time as the fresh timestamp.</p>
+              <p class="tl"> </p>
+              <p class="tl"> </p>
+              <p class="tl"> </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="badge-list" style="margin-top: var(--space-6)">
+          <div class="badge-item">
+            <code class="badge-code">5 min</code>
+            <span class="badge-desc">Discourse topics, Pinboard, Meetings — active conversation data</span>
+          </div>
+          <div class="badge-item">
+            <code class="badge-code">2 min</code>
+            <span class="badge-desc">Matrix chat — faster refresh because chat moves quickly</span>
+          </div>
+          <div class="badge-item">
+            <code class="badge-code">30 min</code>
+            <span class="badge-desc">Blog articles, YouTube videos, Instagram — changes rarely</span>
+          </div>
+          <div class="badge-item">
+            <code class="badge-code">No cache</code>
+            <span class="badge-desc">Pinboard writes — always fresh, because you just changed it</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Screen 3: The Event Bus ─────────────────────────────────── -->
+      <div class="module-screen">
+        <h3 class="screen-title">System 2: The event bus</h3>
+        <p>When a Nitro API route fetches fresh data, it needs to tell the SSE stream so it can broadcast to all connected browsers. But how does one part of the server talk to another? Through an <span class="term" data-definition="An event bus is a shared message board inside a program. One part posts a message ('hey, I have new data!') and any other part that cares can read it — without either side needing to know about the other directly.">event bus</span>.</p>
+
+        <div class="translation-block animate-in">
+          <div class="translation-code">
+            <span class="translation-label">CODE — server/utils/eventBus.ts</span>
+            <pre><code>
+<span class="code-line"><span class="code-keyword">import</span> { EventEmitter } <span class="code-keyword">from</span> <span class="code-string">'node:events'</span></span>
+<span class="code-line"></span>
+<span class="code-line"><span class="code-keyword">const</span> eventBus = <span class="code-keyword">new</span> <span class="code-function">EventEmitter</span>()</span>
+<span class="code-line">eventBus.<span class="code-function">setMaxListeners</span>(50)</span>
+<span class="code-line"></span>
+<span class="code-line"><span class="code-keyword">export default</span> eventBus</span>
+            </code></pre>
+          </div>
+          <div class="translation-english">
+            <span class="translation-label">PLAIN ENGLISH</span>
+            <div class="translation-lines">
+              <p class="tl">Use Node.js's built-in message board system.</p>
+              <p class="tl"> </p>
+              <p class="tl">Create the shared message board.</p>
+              <p class="tl">Allow up to 50 listeners — prevents false "memory leak" warnings.</p>
+              <p class="tl"> </p>
+              <p class="tl">Share this one message board with the whole server.</p>
+            </div>
+          </div>
+        </div>
+
+        <p style="margin-top: var(--space-6)">Here's how it's used in practice. The Discourse API route fetches new topics, then <em>posts</em> to the event bus:</p>
+
+        <div class="translation-block animate-in">
+          <div class="translation-code">
+            <span class="translation-label">CODE — server/api/discourse/latest.get.ts</span>
+            <pre><code>
+<span class="code-line"><span class="code-keyword">const</span> payload = {</span>
+<span class="code-line">  source: <span class="code-string">'live'</span>,</span>
+<span class="code-line">  topics: transformed</span>
+<span class="code-line">}</span>
+<span class="code-line">eventBus.<span class="code-function">emit</span>(<span class="code-string">'discourse'</span>, payload)</span>
+<span class="code-line"><span class="code-keyword">return</span> payload</span>
+            </code></pre>
+          </div>
+          <div class="translation-english">
+            <span class="translation-label">PLAIN ENGLISH</span>
+            <div class="translation-lines">
+              <p class="tl">Package up the result.</p>
+              <p class="tl">Label it as real live data (not mock or cached).</p>
+              <p class="tl">Include the freshly fetched topics.</p>
+              <p class="tl"> </p>
+              <p class="tl">Post the message "discourse" to the shared board with this payload.</p>
+              <p class="tl">Also return the data to whoever called this function directly.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Screen 4: The SSE Stream ────────────────────────────────── -->
+      <div class="module-screen">
+        <h3 class="screen-title">System 3: The SSE stream</h3>
+        <p>The SSE stream (<code>server/api/events/stream.get.ts</code>) is the hub. It listens on the event bus and broadcasts to every connected browser. It also starts background timers that trigger periodic refreshes automatically.</p>
+
+        <div class="translation-block animate-in">
+          <div class="translation-code">
+            <span class="translation-label">CODE — server/api/events/stream.get.ts (excerpt)</span>
+            <pre><code>
+<span class="code-line"><span class="code-comment">// Wire bus events to broadcast</span></span>
+<span class="code-line">eventBus.<span class="code-function">on</span>(<span class="code-string">'discourse'</span>, (data) =></span>
+<span class="code-line">  <span class="code-function">broadcast</span>(<span class="code-string">'discourse'</span>, data)</span>
+<span class="code-line">)</span>
+<span class="code-line"></span>
+<span class="code-line"><span class="code-comment">// Background refresh timers</span></span>
+<span class="code-line"><span class="code-function">setInterval</span>(</span>
+<span class="code-line">  () => <span class="code-function">fetchLatestTopics</span>(),</span>
+<span class="code-line">  <span class="code-number">5</span> * <span class="code-number">60</span> * <span class="code-number">1000</span> <span class="code-comment">// 5 min</span></span>
+<span class="code-line">)</span>
+            </code></pre>
+          </div>
+          <div class="translation-english">
+            <span class="translation-label">PLAIN ENGLISH</span>
+            <div class="translation-lines">
+              <p class="tl">Subscribe to the "discourse" message on the event bus.</p>
+              <p class="tl">Whenever a "discourse" message arrives from anywhere in the server…</p>
+              <p class="tl">…immediately send it to every connected browser.</p>
+              <p class="tl"> </p>
+              <p class="tl"> </p>
+              <p class="tl">Set up a repeating timer.</p>
+              <p class="tl">Every 5 minutes, go fetch the latest Discourse topics.</p>
+              <p class="tl">5 × 60 × 1000 = 5 minutes in milliseconds.</p>
+              <p class="tl"> </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="callout callout-accent" style="margin-top: var(--space-6)">
+          <div class="callout-icon">💡</div>
+          <div class="callout-content">
+            <strong class="callout-title">Why this design is clever</strong>
+            <p>The timer runs <em>on the server</em>, not in each browser. So even if 200 members have the dashboard open, Discourse only gets asked for new data once every 5 minutes — not 200 times. Everyone's browser gets the same broadcast simultaneously. This is called a <span class="term" data-definition="A fan-out pattern sends one piece of data to many recipients at once — like one radio broadcast reaching thousands of radios. The opposite (sending to each recipient individually) is a fan-in.">fan-out</span> pattern.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Screen 5: Full Picture Animation ───────────────────────── -->
+      <div class="module-screen">
+        <h3 class="screen-title">The full live update loop</h3>
+        <p>Now let's watch all three systems — timer, event bus, and SSE stream — work together to push a fresh forum update to your browser.</p>
+
+        <div class="flow-animation" data-steps='[
+          {"highlight":"flow-actor-1","label":"The 5-minute timer fires on the server — time to refresh Discourse topics"},
+          {"highlight":"flow-actor-1","label":"fetchLatestTopics() checks the cache — it is stale, so it calls Discourse","packet":true,"from":"actor-1","to":"actor-2"},
+          {"highlight":"flow-actor-2","label":"Discourse returns fresh topics — 10 latest from the configured categories"},
+          {"highlight":"flow-actor-1","label":"Nitro stores the result in cache, then emits discourse on the event bus","packet":true,"from":"actor-2","to":"actor-1"},
+          {"highlight":"flow-actor-3","label":"The SSE stream hears the event bus and broadcasts to all connected browsers","packet":true,"from":"actor-1","to":"actor-3"},
+          {"highlight":"flow-actor-3","label":"Each browser receives the new data — the Discussions panel re-renders instantly"}
+        ]'>
+          <div class="flow-actors">
+            <div class="flow-actor" id="flow-actor-1">
+              <div class="flow-actor-icon">⚡</div>
+              <span>Nitro + Timer</span>
+            </div>
+            <div class="flow-actor" id="flow-actor-2">
+              <div class="flow-actor-icon">🗣️</div>
+              <span>Discourse API</span>
+            </div>
+            <div class="flow-actor" id="flow-actor-3">
+              <div class="flow-actor-icon">🌐</div>
+              <span>All Browsers</span>
+            </div>
+          </div>
+
+          <div class="flow-packet" id="flow-packet"></div>
+          <div class="flow-step-label" id="flow-label">Click "Next Step" to begin</div>
+
+          <div class="flow-controls">
+            <button class="btn flow-next-btn">Next Step</button>
+            <button class="btn flow-reset-btn">Restart</button>
+            <span class="flow-progress"></span>
+          </div>
+        </div>
+
+        <div class="quiz-container" id="quiz-module3" style="margin-top: var(--space-8)">
+          <div class="quiz-question-block"
+               data-correct="option-a"
+               data-explanation-right="Correct. The timer runs once on the server, data is fetched once, then broadcast to all browsers simultaneously. 200 users = 1 API call."
+               data-explanation-wrong="Think about where the timer runs — in the server, not in each browser. How many times does Discourse get called?">
+            <h3 class="quiz-question">200 members have the dashboard open. The 5-minute timer fires. How many times does Discourse get called?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" onclick="selectOption(this)">
+                <div class="quiz-option-radio"></div>
+                <span>Once — the server fetches and broadcasts to everyone simultaneously</span>
+              </button>
+              <button class="quiz-option" data-value="option-b" onclick="selectOption(this)">
+                <div class="quiz-option-radio"></div>
+                <span>200 times — once per connected browser</span>
+              </button>
+              <button class="quiz-option" data-value="option-c" onclick="selectOption(this)">
+                <div class="quiz-option-radio"></div>
+                <span>It depends on whether the cache is fresh or stale</span>
+              </button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+
+          <button class="quiz-check-btn" onclick="checkQuiz('quiz-module3')">Check Answer</button>
+          <button class="quiz-reset-btn" onclick="resetQuiz('quiz-module3')">Try Again</button>
+        </div>
+      </div>
+
+    </section>

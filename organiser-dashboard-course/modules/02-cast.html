@@ -1,0 +1,277 @@
+    <section class="module" id="module-2">
+
+      <!-- ── Screen 1: Intro ────────────────────────────────────────── -->
+      <div class="module-screen">
+        <div class="module-number">02</div>
+        <h2 class="module-title">The Cast of Characters</h2>
+        <p class="module-subtitle">Who does what — and where to find them in the code</p>
+
+        <p style="margin-top: var(--space-6)">Every app is a team of specialists. Understanding who's responsible for what helps you give better instructions to AI — instead of saying "put the data somewhere", you can say "put this logic in the Nitro API route, not the Vue component."</p>
+
+        <div class="callout callout-accent" style="margin-top: var(--space-6)">
+          <div class="callout-icon">🎭</div>
+          <div class="callout-content">
+            <strong class="callout-title">Think of it like a newsroom</strong>
+            <p>The <strong>Vue components</strong> are the journalists who write the stories you read. The <strong>Nitro server</strong> is the editor who gathers the raw information. The <strong>Discourse/Matrix/YouTube</strong> services are the wire feeds — sources the newsroom monitors constantly.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Screen 2: The Front End ────────────────────────────────── -->
+      <div class="module-screen">
+        <h3 class="screen-title">The front end: Vue + Nuxt</h3>
+        <p>The front end is what runs in your browser. It's built with <span class="term" data-definition="A JavaScript framework for building user interfaces. You describe what the page should look like, and Vue figures out how to update the browser's display efficiently when data changes.">Vue</span>, wrapped in a framework called <span class="term" data-definition="A full-stack framework built on top of Vue. It handles routing, server-side rendering, and connecting your front-end components to your back-end API routes — all in one project.">Nuxt</span>.</p>
+
+        <div class="file-tree" style="margin-top: var(--space-6)">
+          <div class="ft-folder open">
+            <span class="ft-name">app/</span>
+            <span class="ft-desc">Everything the browser sees and runs</span>
+            <div class="ft-children">
+              <div class="ft-folder">
+                <span class="ft-name">components/panels/</span>
+                <span class="ft-desc">One .vue file per panel — DiscussionsPanel, MatrixPanel, etc.</span>
+              </div>
+              <div class="ft-folder">
+                <span class="ft-name">components/ui/</span>
+                <span class="ft-desc">Shared widgets — PanelWrapper, ThemeSwitcher, UserPreferences</span>
+              </div>
+              <div class="ft-folder">
+                <span class="ft-name">composables/</span>
+                <span class="ft-desc">Reusable logic — useSSE, usePanelVisibility, useColorTheme</span>
+              </div>
+              <div class="ft-file">
+                <span class="ft-name">pages/index.vue</span>
+                <span class="ft-desc">The dashboard grid — arranges the three columns and panels</span>
+              </div>
+              <div class="ft-file">
+                <span class="ft-name">layouts/default.vue</span>
+                <span class="ft-desc">The sidebar and header that wrap every page</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="callout callout-info" style="margin-top: var(--space-6)">
+          <div class="callout-icon">💡</div>
+          <div class="callout-content">
+            <strong class="callout-title">Key insight: composables</strong>
+            <p>A <span class="term" data-definition="A reusable piece of stateful logic in Vue. Instead of copying the same logic into every component, you write it once as a composable and import it wherever you need it — like a shared utility drawer.">composable</span> is a function that bundles related logic together. <code>useSSE</code> bundles all the SSE connection logic. <code>usePanelVisibility</code> bundles all the show/hide logic. When you tell AI to add a feature, knowing "put this in a composable" keeps the codebase organised.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Screen 3: The Back End ──────────────────────────────────── -->
+      <div class="module-screen">
+        <h3 class="screen-title">The back end: Nitro API routes</h3>
+        <p>The <span class="term" data-definition="The back end is the code that runs on the server, not in your browser. It handles secret credentials, fetches from external APIs, and prepares data before sending it to the front end.">back end</span> is built with <span class="term" data-definition="Nitro is Nuxt's built-in server engine. It runs on Node.js and handles your API routes — the URLs your front end calls to get data. On Netlify, each API route becomes its own serverless function.">Nitro</span>. Each panel has its own dedicated <span class="term" data-definition="A URL on the server that responds to requests from the browser. For example, /api/discourse returns the latest forum topics. Think of it like a vending machine slot — you put in a request, you get back data.">API route</span>.</p>
+
+        <div class="file-tree" style="margin-top: var(--space-6)">
+          <div class="ft-folder open">
+            <span class="ft-name">server/</span>
+            <span class="ft-desc">Everything that runs on the server, never exposed to users</span>
+            <div class="ft-children">
+              <div class="ft-folder open">
+                <span class="ft-name">api/</span>
+                <span class="ft-desc">One file per endpoint — the file name IS the URL</span>
+                <div class="ft-children">
+                  <div class="ft-file">
+                    <span class="ft-name">discourse/latest.get.ts</span>
+                    <span class="ft-desc">GET /api/discourse/latest — forum topics</span>
+                  </div>
+                  <div class="ft-file">
+                    <span class="ft-name">pinboard/index.get.ts</span>
+                    <span class="ft-desc">GET /api/pinboard — announcements</span>
+                  </div>
+                  <div class="ft-file">
+                    <span class="ft-name">matrix/index.get.ts</span>
+                    <span class="ft-desc">GET /api/matrix — chat messages</span>
+                  </div>
+                  <div class="ft-file">
+                    <span class="ft-name">events/stream.get.ts</span>
+                    <span class="ft-desc">GET /api/events/stream — the live SSE connection</span>
+                  </div>
+                </div>
+              </div>
+              <div class="ft-folder">
+                <span class="ft-name">utils/</span>
+                <span class="ft-desc">Shared helpers — cache.ts, discourse.ts, eventBus.ts</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Screen 4: External Services ────────────────────────────── -->
+      <div class="module-screen">
+        <h3 class="screen-title">The external services</h3>
+        <p>The dashboard doesn't store most of its own data — it reads from services your organisation already uses. These are configured via <span class="term" data-definition="Environment variables are named values stored outside your code, in the server's configuration. They hold secrets (API keys, passwords) and settings that change between environments. You never put secrets directly in code — that would be like leaving your house key in the front door.">environment variables</span>, so the same code can power any organisation's dashboard with no code changes.</p>
+
+        <div class="icon-rows" style="margin-top: var(--space-6)">
+          <div class="icon-row">
+            <div class="icon-circle" style="background: var(--color-actor-1)">🗣️</div>
+            <div>
+              <strong>Discourse</strong>
+              <p>Open-source forum platform. The dashboard treats it as the single source of truth for discussions, announcements, meetings, and key documents.</p>
+            </div>
+          </div>
+          <div class="icon-row">
+            <div class="icon-circle" style="background: var(--color-actor-2)">💬</div>
+            <div>
+              <strong>Matrix</strong>
+              <p>Open-source, decentralised chat. The dashboard reads recent messages and can send replies — all without leaving the page.</p>
+            </div>
+          </div>
+          <div class="icon-row">
+            <div class="icon-circle" style="background: var(--color-actor-3)">▶️</div>
+            <div>
+              <strong>YouTube &amp; Instagram</strong>
+              <p>Via the YouTube Data API v3 and Behold.so (an Instagram widget service). Both fall back to mock data if not configured.</p>
+            </div>
+          </div>
+          <div class="icon-row">
+            <div class="icon-circle" style="background: var(--color-actor-4)">📰</div>
+            <div>
+              <strong>RSS / Atom feeds</strong>
+              <p>Any blog that publishes an RSS feed. WordPress, Ghost, Substack — just point the dashboard at the feed URL.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Screen 5: Group Chat Animation ─────────────────────────── -->
+      <div class="module-screen">
+        <h3 class="screen-title">Watch the actors talk</h3>
+        <p>When a user's browser opens the dashboard, here's what the conversation looks like between the front end and the server:</p>
+
+        <div class="chat-window" id="chat-module2">
+          <div class="chat-messages">
+            <div class="chat-message" data-msg="0" data-sender="browser" style="display:none">
+              <div class="chat-avatar" style="background: var(--color-actor-1)">🌐</div>
+              <div class="chat-bubble">
+                <span class="chat-sender" style="color: var(--color-actor-1)">Browser</span>
+                <p>Hey Nitro, user just opened the page — give me everything!</p>
+              </div>
+            </div>
+            <div class="chat-message" data-msg="1" data-sender="nitro" style="display:none">
+              <div class="chat-avatar" style="background: var(--color-actor-2)">⚡</div>
+              <div class="chat-bubble">
+                <span class="chat-sender" style="color: var(--color-actor-2)">Nitro Server</span>
+                <p>On it! Calling Discourse, Matrix, YouTube, and RSS all at the same time…</p>
+              </div>
+            </div>
+            <div class="chat-message" data-msg="2" data-sender="discourse" style="display:none">
+              <div class="chat-avatar" style="background: var(--color-actor-3)">🗣️</div>
+              <div class="chat-bubble">
+                <span class="chat-sender" style="color: var(--color-actor-3)">Discourse API</span>
+                <p>Here are 10 latest topics from your configured categories!</p>
+              </div>
+            </div>
+            <div class="chat-message" data-msg="3" data-sender="nitro" style="display:none">
+              <div class="chat-avatar" style="background: var(--color-actor-2)">⚡</div>
+              <div class="chat-bubble">
+                <span class="chat-sender" style="color: var(--color-actor-2)">Nitro Server</span>
+                <p>Caching that for 5 minutes. Rendering the full HTML page now…</p>
+              </div>
+            </div>
+            <div class="chat-message" data-msg="4" data-sender="browser" style="display:none">
+              <div class="chat-avatar" style="background: var(--color-actor-1)">🌐</div>
+              <div class="chat-bubble">
+                <span class="chat-sender" style="color: var(--color-actor-1)">Browser</span>
+                <p>Got it! Page is showing — now opening the SSE live channel. Keep the updates coming!</p>
+              </div>
+            </div>
+            <div class="chat-message" data-msg="5" data-sender="nitro" style="display:none">
+              <div class="chat-avatar" style="background: var(--color-actor-2)">⚡</div>
+              <div class="chat-bubble">
+                <span class="chat-sender" style="color: var(--color-actor-2)">Nitro Server</span>
+                <p>SSE connection open. I'll push fresh data every few minutes automatically. You just listen.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="chat-typing" style="display:none">
+            <div class="chat-avatar">?</div>
+            <div class="chat-typing-dots">
+              <span class="typing-dot"></span>
+              <span class="typing-dot"></span>
+              <span class="typing-dot"></span>
+            </div>
+          </div>
+
+          <div class="chat-controls">
+            <button class="btn chat-next-btn">Next Message</button>
+            <button class="btn chat-all-btn">Play All</button>
+            <button class="btn chat-reset-btn">Replay</button>
+            <span class="chat-progress"></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Screen 6: Code Translation ─────────────────────────────── -->
+      <div class="module-screen">
+        <h3 class="screen-title">The panel grid in plain English</h3>
+        <p>Here's the heart of <code>pages/index.vue</code> — the code that arranges the panels and wires them to live updates:</p>
+
+        <div class="translation-block animate-in">
+          <div class="translation-code">
+            <span class="translation-label">CODE</span>
+            <pre><code>
+<span class="code-line"><span class="code-keyword">const</span> sse = <span class="code-function">useSSE</span>()</span>
+<span class="code-line"></span>
+<span class="code-line"><span class="code-comment">// Wire SSE events to panels</span></span>
+<span class="code-line">sse.<span class="code-function">on</span>(<span class="code-string">'discourse'</span>, (data) =></span>
+<span class="code-line">  discussionsPanel.value?.<span class="code-function">updateFromSSE</span>(data)</span>
+<span class="code-line">)</span>
+<span class="code-line">sse.<span class="code-function">on</span>(<span class="code-string">'matrix'</span>, (data) =></span>
+<span class="code-line">  matrixPanel.value?.<span class="code-function">updateFromSSE</span>(data)</span>
+<span class="code-line">)</span>
+<span class="code-line"></span>
+<span class="code-line"><span class="code-function">onMounted</span>(() => { sse.<span class="code-function">connect</span>() })</span>
+            </code></pre>
+          </div>
+          <div class="translation-english">
+            <span class="translation-label">PLAIN ENGLISH</span>
+            <div class="translation-lines">
+              <p class="tl">Get the live update system ready.</p>
+              <p class="tl"> </p>
+              <p class="tl">Tell the live update system: whenever new forum data arrives…</p>
+              <p class="tl">…hand it to the Discussions panel so it can refresh itself.</p>
+              <p class="tl">(The <code>?.</code> means "only if the panel is currently visible")</p>
+              <p class="tl">Same thing for Matrix chat messages.</p>
+              <p class="tl"> </p>
+              <p class="tl"> </p>
+              <p class="tl"> </p>
+              <p class="tl">Once the page is fully loaded in the browser, open the live connection.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="quiz-container" id="quiz-module2">
+          <div class="quiz-question-block"
+               data-correct="option-b"
+               data-explanation-right="Right. The file name (discourse/latest.get.ts) becomes the URL (/api/discourse/latest). It's a zero-config convention that Nitro uses."
+               data-explanation-wrong="Not quite — think about what's special about how Nitro names its API routes.">
+            <h3 class="quiz-question">In the server/api/ folder, the file is named discourse/latest.get.ts. How does this become an API endpoint?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" onclick="selectOption(this)">
+                <div class="quiz-option-radio"></div>
+                <span>You have to manually register each file as a route in a config file</span>
+              </button>
+              <button class="quiz-option" data-value="option-b" onclick="selectOption(this)">
+                <div class="quiz-option-radio"></div>
+                <span>The file path becomes the URL automatically — server/api/discourse/latest.get.ts → GET /api/discourse/latest</span>
+              </button>
+              <button class="quiz-option" data-value="option-c" onclick="selectOption(this)">
+                <div class="quiz-option-radio"></div>
+                <span>It only works if you import it in the main server file</span>
+              </button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+
+          <button class="quiz-check-btn" onclick="checkQuiz('quiz-module2')">Check Answer</button>
+          <button class="quiz-reset-btn" onclick="resetQuiz('quiz-module2')">Try Again</button>
+        </div>
+      </div>
+
+    </section>

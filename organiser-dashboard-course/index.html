@@ -1,0 +1,1363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>How the Organiser Dashboard Works</title>
+
+  <!-- Google Fonts: Bricolage Grotesque · DM Sans · JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700;12..96,800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400;1,9..40,500&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="styles.css">
+
+  <!-- teal accent — calm, open-source, community-organiser feel -->
+  <style>
+    :root {
+      --color-accent:       #2A7B9B;
+      --color-accent-hover: #1F6280;
+      --color-accent-light: #E4F2F7;
+      --color-accent-muted: #5A9DB8;
+    }
+  </style>
+
+  <script src="main.js" defer></script>
+</head>
+<body>
+
+  <nav class="nav" id="nav">
+    <div class="progress-bar" id="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+    <div class="nav-inner">
+      <span class="nav-title">How the Organiser Dashboard Works</span>
+      <div class="nav-dots" id="nav-dots" role="tablist">
+        <button class="nav-dot" data-target="module-1" data-tooltip="Welcome" role="tab" aria-label="Module 1: Welcome"></button>
+        <button class="nav-dot" data-target="module-2" data-tooltip="The Cast" role="tab" aria-label="Module 2: The Cast"></button>
+        <button class="nav-dot" data-target="module-3" data-tooltip="Always Fresh" role="tab" aria-label="Module 3: Always Fresh"></button>
+        <button class="nav-dot" data-target="module-4" data-tooltip="Discourse as Backbone" role="tab" aria-label="Module 4: Discourse as Backbone"></button>
+        <button class="nav-dot" data-target="module-5" data-tooltip="Make It Your Own" role="tab" aria-label="Module 5: Make It Your Own"></button>
+      </div>
+    </div>
+  </nav>
+
+  <main id="main">
+    <!-- modules/*.html content is assembled here by build.sh -->
+    <section class="module" id="module-1">
+
+      <!-- ── Screen 1: The Problem ───────────────────────────────── -->
+      <div class="module-screen">
+        <div class="module-number">01</div>
+        <h2 class="module-title">Welcome to the Dashboard</h2>
+        <p class="module-subtitle">One place instead of six tabs</p>
+
+        <div class="icon-rows" style="margin-top: var(--space-8)">
+          <div class="icon-row">
+            <div class="icon-circle" style="background: var(--color-actor-1)">💬</div>
+            <div>
+              <strong>The problem</strong>
+              <p>Community organisations run their lives across Discourse forums, Matrix chat, a blog, YouTube, and Instagram — and everyone is checking 5–6 different tabs constantly.</p>
+            </div>
+          </div>
+          <div class="icon-row">
+            <div class="icon-circle" style="background: var(--color-actor-2)">🗂️</div>
+            <div>
+              <strong>The solution</strong>
+              <p>The Organiser Dashboard pulls all of those sources into one live-updating page. No switching tabs. No manual refreshes. Everything in one place.</p>
+            </div>
+          </div>
+          <div class="icon-row">
+            <div class="icon-circle" style="background: var(--color-actor-3)">🔓</div>
+            <div>
+              <strong>The philosophy</strong>
+              <p>Every service it talks to — Discourse, Matrix — is open-source and self-hostable. No vendor lock-in. Your data stays with you.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Screen 2: What You See ──────────────────────────────── -->
+      <div class="module-screen">
+        <h3 class="screen-title">Eight panels, three columns</h3>
+        <p>When you open the dashboard you see a three-column grid. Each "panel" is a live window into one data source. You can toggle any panel on or off — and your preferences are saved in your browser.</p>
+
+        <div class="pattern-cards" style="margin-top: var(--space-6)">
+          <div class="pattern-card" style="border-top: 3px solid var(--color-actor-1)">
+            <div class="pattern-icon" style="background: var(--color-actor-1)">📌</div>
+            <h4 class="pattern-title">Left Column</h4>
+            <p class="pattern-desc">Announcements, Chat (Matrix), Instagram</p>
+          </div>
+          <div class="pattern-card" style="border-top: 3px solid var(--color-actor-2)">
+            <div class="pattern-icon" style="background: var(--color-actor-2)">🗣️</div>
+            <h4 class="pattern-title">Centre Column</h4>
+            <p class="pattern-desc">Discussions — the main Discourse forum feed</p>
+          </div>
+          <div class="pattern-card" style="border-top: 3px solid var(--color-actor-3)">
+            <div class="pattern-icon" style="background: var(--color-actor-3)">📚</div>
+            <h4 class="pattern-title">Right Column</h4>
+            <p class="pattern-desc">Videos, Articles (RSS), Meetings, Key Docs</p>
+          </div>
+        </div>
+
+        <div class="callout callout-info" style="margin-top: var(--space-8)">
+          <div class="callout-icon">💡</div>
+          <div class="callout-content">
+            <strong class="callout-title">Why three columns?</strong>
+            <p>On desktop you see all three side-by-side. On mobile they stack. The CSS <span class="term" data-definition="A CSS property that controls the visual position of an element within a layout. Think of it like telling the browser 'put this piece here in the stack even though it appears here in the HTML.'">order</span> property controls which column appears first when stacked — by default, actionable content (Announcements, Chat) comes before the forum on mobile.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Screen 3: What Happens When You Open the URL ─────────── -->
+      <div class="module-screen">
+        <h3 class="screen-title">What happens in the first second</h3>
+        <p>Imagine you type the dashboard URL in your browser and hit Enter. Here is the exact chain of events — from your keystroke to the page appearing fully populated with data.</p>
+
+        <div class="step-cards" style="margin-top: var(--space-6)">
+          <div class="step-card">
+            <div class="step-num">1</div>
+            <div class="step-body">
+              <strong>Your browser sends a request to Netlify</strong>
+              <p>The URL resolves to a Netlify serverless function running the Nuxt server.</p>
+            </div>
+          </div>
+          <div class="step-card">
+            <div class="step-num">2</div>
+            <div class="step-body">
+              <strong>The server fetches all data in parallel</strong>
+              <p>The Nitro server calls Discourse, Matrix, YouTube, etc. simultaneously — not one after the other.</p>
+            </div>
+          </div>
+          <div class="step-card">
+            <div class="step-num">3</div>
+            <div class="step-body">
+              <strong>A complete HTML page arrives in your browser</strong>
+              <p>The server renders the full HTML — panels already populated — and sends it all at once. This is called <span class="term" data-definition="Server-Side Rendering: the server builds the full HTML page before sending it to the browser, so the user sees content immediately rather than waiting for JavaScript to load and then fetch data.">SSR</span>.</p>
+            </div>
+          </div>
+          <div class="step-card">
+            <div class="step-num">4</div>
+            <div class="step-body">
+              <strong>The browser opens a live channel</strong>
+              <p>After the page loads, JavaScript silently opens a <span class="term" data-definition="Server-Sent Events: a one-way channel where the server can push updates to the browser at any time, without the browser having to ask. Like a radio station broadcasting — the browser just listens.">SSE</span> connection to the server. From now on, the server pushes fresh data automatically.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Screen 4: The Data Flow Animation ──────────────────────── -->
+      <div class="module-screen">
+        <h3 class="screen-title">See it in motion</h3>
+        <p>Step through what happens when you first open the dashboard URL. Watch how the request travels from your browser to the server and back.</p>
+
+        <div class="flow-animation" data-steps='[
+          {"highlight":"flow-actor-1","label":"You type the URL and press Enter — your browser sends a GET request"},
+          {"highlight":"flow-actor-2","label":"Netlify receives the request and wakes up the Nuxt/Nitro server function","packet":true,"from":"actor-1","to":"actor-2"},
+          {"highlight":"flow-actor-3","label":"Nitro fires parallel fetches: Discourse, Matrix, YouTube, RSS all at once","packet":true,"from":"actor-2","to":"actor-3"},
+          {"highlight":"flow-actor-3","label":"Data arrives back from all sources and is cached in server memory"},
+          {"highlight":"flow-actor-2","label":"Nitro renders the complete HTML page with all panels already filled in"},
+          {"highlight":"flow-actor-1","label":"Your browser receives one complete HTML document — you see the full dashboard instantly","packet":true,"from":"actor-2","to":"actor-1"},
+          {"highlight":"flow-actor-1","label":"JavaScript opens the SSE channel — the dashboard is now live and self-updating"}
+        ]'>
+          <div class="flow-actors">
+            <div class="flow-actor" id="flow-actor-1">
+              <div class="flow-actor-icon">🌐</div>
+              <span>Your Browser</span>
+            </div>
+            <div class="flow-actor" id="flow-actor-2">
+              <div class="flow-actor-icon">⚡</div>
+              <span>Nitro Server</span>
+            </div>
+            <div class="flow-actor" id="flow-actor-3">
+              <div class="flow-actor-icon">🌍</div>
+              <span>External APIs</span>
+            </div>
+          </div>
+
+          <div class="flow-packet" id="flow-packet"></div>
+          <div class="flow-step-label" id="flow-label">Click "Next Step" to begin</div>
+
+          <div class="flow-controls">
+            <button class="btn flow-next-btn">Next Step</button>
+            <button class="btn flow-reset-btn">Restart</button>
+            <span class="flow-progress"></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Screen 5: Quiz ─────────────────────────────────────────── -->
+      <div class="module-screen">
+        <h3 class="screen-title">Check your understanding</h3>
+
+        <div class="quiz-container" id="quiz-module1">
+          <div class="quiz-question-block"
+               data-correct="option-c"
+               data-explanation-right="Exactly. SSR means the server does the work of populating the page before sending it — so the browser receives fully-formed content, not a blank shell."
+               data-explanation-wrong="Close, but think about timing: when does the data get added to the page — before or after the HTML arrives in your browser?">
+            <h3 class="quiz-question">The dashboard uses SSR (Server-Side Rendering). What does that mean for the user experience?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" onclick="selectOption(this)">
+                <div class="quiz-option-radio"></div>
+                <span>The browser downloads JavaScript first, then fetches data — you see a loading spinner initially</span>
+              </button>
+              <button class="quiz-option" data-value="option-b" onclick="selectOption(this)">
+                <div class="quiz-option-radio"></div>
+                <span>The page only works when the user has a fast internet connection</span>
+              </button>
+              <button class="quiz-option" data-value="option-c" onclick="selectOption(this)">
+                <div class="quiz-option-radio"></div>
+                <span>The server fetches data and builds the full HTML page before sending anything — panels are populated the moment the page arrives</span>
+              </button>
+              <button class="quiz-option" data-value="option-d" onclick="selectOption(this)">
+                <div class="quiz-option-radio"></div>
+                <span>The server stores a pre-built HTML file and serves the same one to everyone</span>
+              </button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+
+          <div class="quiz-question-block"
+               data-correct="option-b"
+               data-explanation-right="Correct. SSE is a one-way push channel — the server broadcasts data to the browser whenever it has something new. The browser never has to ask."
+               data-explanation-wrong="Not quite. Think about who initiates the communication after the SSE channel is open — the browser, or the server?">
+            <h3 class="quiz-question">After the page loads, the dashboard opens an SSE (Server-Sent Events) connection. What does this do?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" onclick="selectOption(this)">
+                <div class="quiz-option-radio"></div>
+                <span>The browser checks the server for new data every 30 seconds</span>
+              </button>
+              <button class="quiz-option" data-value="option-b" onclick="selectOption(this)">
+                <div class="quiz-option-radio"></div>
+                <span>The server can push fresh data to the browser at any time — panels update themselves without any user action</span>
+              </button>
+              <button class="quiz-option" data-value="option-c" onclick="selectOption(this)">
+                <div class="quiz-option-radio"></div>
+                <span>The browser and server can chat back and forth in real time, like a phone call</span>
+              </button>
+              <button class="quiz-option" data-value="option-d" onclick="selectOption(this)">
+                <div class="quiz-option-radio"></div>
+                <span>The user gets a notification when someone posts to the forum</span>
+              </button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+
+          <button class="quiz-check-btn" onclick="checkQuiz('quiz-module1')">Check Answers</button>
+          <button class="quiz-reset-btn" onclick="resetQuiz('quiz-module1')">Try Again</button>
+        </div>
+      </div>
+
+    </section>
+    <section class="module" id="module-2">
+
+      <!-- ── Screen 1: Intro ────────────────────────────────────────── -->
+      <div class="module-screen">
+        <div class="module-number">02</div>
+        <h2 class="module-title">The Cast of Characters</h2>
+        <p class="module-subtitle">Who does what — and where to find them in the code</p>
+
+        <p style="margin-top: var(--space-6)">Every app is a team of specialists. Understanding who's responsible for what helps you give better instructions to AI — instead of saying "put the data somewhere", you can say "put this logic in the Nitro API route, not the Vue component."</p>
+
+        <div class="callout callout-accent" style="margin-top: var(--space-6)">
+          <div class="callout-icon">🎭</div>
+          <div class="callout-content">
+            <strong class="callout-title">Think of it like a newsroom</strong>
+            <p>The <strong>Vue components</strong> are the journalists who write the stories you read. The <strong>Nitro server</strong> is the editor who gathers the raw information. The <strong>Discourse/Matrix/YouTube</strong> services are the wire feeds — sources the newsroom monitors constantly.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Screen 2: The Front End ────────────────────────────────── -->
+      <div class="module-screen">
+        <h3 class="screen-title">The front end: Vue + Nuxt</h3>
+        <p>The front end is what runs in your browser. It's built with <span class="term" data-definition="A JavaScript framework for building user interfaces. You describe what the page should look like, and Vue figures out how to update the browser's display efficiently when data changes.">Vue</span>, wrapped in a framework called <span class="term" data-definition="A full-stack framework built on top of Vue. It handles routing, server-side rendering, and connecting your front-end components to your back-end API routes — all in one project.">Nuxt</span>.</p>
+
+        <div class="file-tree" style="margin-top: var(--space-6)">
+          <div class="ft-folder open">
+            <span class="ft-name">app/</span>
+            <span class="ft-desc">Everything the browser sees and runs</span>
+            <div class="ft-children">
+              <div class="ft-folder">
+                <span class="ft-name">components/panels/</span>
+                <span class="ft-desc">One .vue file per panel — DiscussionsPanel, MatrixPanel, etc.</span>
+              </div>
+              <div class="ft-folder">
+                <span class="ft-name">components/ui/</span>
+                <span class="ft-desc">Shared widgets — PanelWrapper, ThemeSwitcher, UserPreferences</span>
+              </div>
+              <div class="ft-folder">
+                <span class="ft-name">composables/</span>
+                <span class="ft-desc">Reusable logic — useSSE, usePanelVisibility, useColorTheme</span>
+              </div>
+              <div class="ft-file">
+                <span class="ft-name">pages/index.vue</span>
+                <span class="ft-desc">The dashboard grid — arranges the three columns and panels</span>
+              </div>
+              <div class="ft-file">
+                <span class="ft-name">layouts/default.vue</span>
+                <span class="ft-desc">The sidebar and header that wrap every page</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="callout callout-info" style="margin-top: var(--space-6)">
+          <div class="callout-icon">💡</div>
+          <div class="callout-content">
+            <strong class="callout-title">Key insight: composables</strong>
+            <p>A <span class="term" data-definition="A reusable piece of stateful logic in Vue. Instead of copying the same logic into every component, you write it once as a composable and import it wherever you need it — like a shared utility drawer.">composable</span> is a function that bundles related logic together. <code>useSSE</code> bundles all the SSE connection logic. <code>usePanelVisibility</code> bundles all the show/hide logic. When you tell AI to add a feature, knowing "put this in a composable" keeps the codebase organised.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Screen 3: The Back End ──────────────────────────────────── -->
+      <div class="module-screen">
+        <h3 class="screen-title">The back end: Nitro API routes</h3>
+        <p>The <span class="term" data-definition="The back end is the code that runs on the server, not in your browser. It handles secret credentials, fetches from external APIs, and prepares data before sending it to the front end.">back end</span> is built with <span class="term" data-definition="Nitro is Nuxt's built-in server engine. It runs on Node.js and handles your API routes — the URLs your front end calls to get data. On Netlify, each API route becomes its own serverless function.">Nitro</span>. Each panel has its own dedicated <span class="term" data-definition="A URL on the server that responds to requests from the browser. For example, /api/discourse returns the latest forum topics. Think of it like a vending machine slot — you put in a request, you get back data.">API route</span>.</p>
+
+        <div class="file-tree" style="margin-top: var(--space-6)">
+          <div class="ft-folder open">
+            <span class="ft-name">server/</span>
+            <span class="ft-desc">Everything that runs on the server, never exposed to users</span>
+            <div class="ft-children">
+              <div class="ft-folder open">
+                <span class="ft-name">api/</span>
+                <span class="ft-desc">One file per endpoint — the file name IS the URL</span>
+                <div class="ft-children">
+                  <div class="ft-file">
+                    <span class="ft-name">discourse/latest.get.ts</span>
+                    <span class="ft-desc">GET /api/discourse/latest — forum topics</span>
+                  </div>
+                  <div class="ft-file">
+                    <span class="ft-name">pinboard/index.get.ts</span>
+                    <span class="ft-desc">GET /api/pinboard — announcements</span>
+                  </div>
+                  <div class="ft-file">
+                    <span class="ft-name">matrix/index.get.ts</span>
+                    <span class="ft-desc">GET /api/matrix — chat messages</span>
+                  </div>
+                  <div class="ft-file">
+                    <span class="ft-name">events/stream.get.ts</span>
+                    <span class="ft-desc">GET /api/events/stream — the live SSE connection</span>
+                  </div>
+                </div>
+              </div>
+              <div class="ft-folder">
+                <span class="ft-name">utils/</span>
+                <span class="ft-desc">Shared helpers — cache.ts, discourse.ts, eventBus.ts</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Screen 4: External Services ────────────────────────────── -->
+      <div class="module-screen">
+        <h3 class="screen-title">The external services</h3>
+        <p>The dashboard doesn't store most of its own data — it reads from services your organisation already uses. These are configured via <span class="term" data-definition="Environment variables are named values stored outside your code, in the server's configuration. They hold secrets (API keys, passwords) and settings that change between environments. You never put secrets directly in code — that would be like leaving your house key in the front door.">environment variables</span>, so the same code can power any organisation's dashboard with no code changes.</p>
+
+        <div class="icon-rows" style="margin-top: var(--space-6)">
+          <div class="icon-row">
+            <div class="icon-circle" style="background: var(--color-actor-1)">🗣️</div>
+            <div>
+              <strong>Discourse</strong>
+              <p>Open-source forum platform. The dashboard treats it as the single source of truth for discussions, announcements, meetings, and key documents.</p>
+            </div>
+          </div>
+          <div class="icon-row">
+            <div class="icon-circle" style="background: var(--color-actor-2)">💬</div>
+            <div>
+              <strong>Matrix</strong>
+              <p>Open-source, decentralised chat. The dashboard reads recent messages and can send replies — all without leaving the page.</p>
+            </div>
+          </div>
+          <div class="icon-row">
+            <div class="icon-circle" style="background: var(--color-actor-3)">▶️</div>
+            <div>
+              <strong>YouTube &amp; Instagram</strong>
+              <p>Via the YouTube Data API v3 and Behold.so (an Instagram widget service). Both fall back to mock data if not configured.</p>
+            </div>
+          </div>
+          <div class="icon-row">
+            <div class="icon-circle" style="background: var(--color-actor-4)">📰</div>
+            <div>
+              <strong>RSS / Atom feeds</strong>
+              <p>Any blog that publishes an RSS feed. WordPress, Ghost, Substack — just point the dashboard at the feed URL.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Screen 5: Group Chat Animation ─────────────────────────── -->
+      <div class="module-screen">
+        <h3 class="screen-title">Watch the actors talk</h3>
+        <p>When a user's browser opens the dashboard, here's what the conversation looks like between the front end and the server:</p>
+
+        <div class="chat-window" id="chat-module2">
+          <div class="chat-messages">
+            <div class="chat-message" data-msg="0" data-sender="browser" style="display:none">
+              <div class="chat-avatar" style="background: var(--color-actor-1)">🌐</div>
+              <div class="chat-bubble">
+                <span class="chat-sender" style="color: var(--color-actor-1)">Browser</span>
+                <p>Hey Nitro, user just opened the page — give me everything!</p>
+              </div>
+            </div>
+            <div class="chat-message" data-msg="1" data-sender="nitro" style="display:none">
+              <div class="chat-avatar" style="background: var(--color-actor-2)">⚡</div>
+              <div class="chat-bubble">
+                <span class="chat-sender" style="color: var(--color-actor-2)">Nitro Server</span>
+                <p>On it! Calling Discourse, Matrix, YouTube, and RSS all at the same time…</p>
+              </div>
+            </div>
+            <div class="chat-message" data-msg="2" data-sender="discourse" style="display:none">
+              <div class="chat-avatar" style="background: var(--color-actor-3)">🗣️</div>
+              <div class="chat-bubble">
+                <span class="chat-sender" style="color: var(--color-actor-3)">Discourse API</span>
+                <p>Here are 10 latest topics from your configured categories!</p>
+              </div>
+            </div>
+            <div class="chat-message" data-msg="3" data-sender="nitro" style="display:none">
+              <div class="chat-avatar" style="background: var(--color-actor-2)">⚡</div>
+              <div class="chat-bubble">
+                <span class="chat-sender" style="color: var(--color-actor-2)">Nitro Server</span>
+                <p>Caching that for 5 minutes. Rendering the full HTML page now…</p>
+              </div>
+            </div>
+            <div class="chat-message" data-msg="4" data-sender="browser" style="display:none">
+              <div class="chat-avatar" style="background: var(--color-actor-1)">🌐</div>
+              <div class="chat-bubble">
+                <span class="chat-sender" style="color: var(--color-actor-1)">Browser</span>
+                <p>Got it! Page is showing — now opening the SSE live channel. Keep the updates coming!</p>
+              </div>
+            </div>
+            <div class="chat-message" data-msg="5" data-sender="nitro" style="display:none">
+              <div class="chat-avatar" style="background: var(--color-actor-2)">⚡</div>
+              <div class="chat-bubble">
+                <span class="chat-sender" style="color: var(--color-actor-2)">Nitro Server</span>
+                <p>SSE connection open. I'll push fresh data every few minutes automatically. You just listen.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="chat-typing" style="display:none">
+            <div class="chat-avatar">?</div>
+            <div class="chat-typing-dots">
+              <span class="typing-dot"></span>
+              <span class="typing-dot"></span>
+              <span class="typing-dot"></span>
+            </div>
+          </div>
+
+          <div class="chat-controls">
+            <button class="btn chat-next-btn">Next Message</button>
+            <button class="btn chat-all-btn">Play All</button>
+            <button class="btn chat-reset-btn">Replay</button>
+            <span class="chat-progress"></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Screen 6: Code Translation ─────────────────────────────── -->
+      <div class="module-screen">
+        <h3 class="screen-title">The panel grid in plain English</h3>
+        <p>Here's the heart of <code>pages/index.vue</code> — the code that arranges the panels and wires them to live updates:</p>
+
+        <div class="translation-block animate-in">
+          <div class="translation-code">
+            <span class="translation-label">CODE</span>
+            <pre><code>
+<span class="code-line"><span class="code-keyword">const</span> sse = <span class="code-function">useSSE</span>()</span>
+<span class="code-line"></span>
+<span class="code-line"><span class="code-comment">// Wire SSE events to panels</span></span>
+<span class="code-line">sse.<span class="code-function">on</span>(<span class="code-string">'discourse'</span>, (data) =></span>
+<span class="code-line">  discussionsPanel.value?.<span class="code-function">updateFromSSE</span>(data)</span>
+<span class="code-line">)</span>
+<span class="code-line">sse.<span class="code-function">on</span>(<span class="code-string">'matrix'</span>, (data) =></span>
+<span class="code-line">  matrixPanel.value?.<span class="code-function">updateFromSSE</span>(data)</span>
+<span class="code-line">)</span>
+<span class="code-line"></span>
+<span class="code-line"><span class="code-function">onMounted</span>(() => { sse.<span class="code-function">connect</span>() })</span>
+            </code></pre>
+          </div>
+          <div class="translation-english">
+            <span class="translation-label">PLAIN ENGLISH</span>
+            <div class="translation-lines">
+              <p class="tl">Get the live update system ready.</p>
+              <p class="tl"> </p>
+              <p class="tl">Tell the live update system: whenever new forum data arrives…</p>
+              <p class="tl">…hand it to the Discussions panel so it can refresh itself.</p>
+              <p class="tl">(The <code>?.</code> means "only if the panel is currently visible")</p>
+              <p class="tl">Same thing for Matrix chat messages.</p>
+              <p class="tl"> </p>
+              <p class="tl"> </p>
+              <p class="tl"> </p>
+              <p class="tl">Once the page is fully loaded in the browser, open the live connection.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="quiz-container" id="quiz-module2">
+          <div class="quiz-question-block"
+               data-correct="option-b"
+               data-explanation-right="Right. The file name (discourse/latest.get.ts) becomes the URL (/api/discourse/latest). It's a zero-config convention that Nitro uses."
+               data-explanation-wrong="Not quite — think about what's special about how Nitro names its API routes.">
+            <h3 class="quiz-question">In the server/api/ folder, the file is named discourse/latest.get.ts. How does this become an API endpoint?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" onclick="selectOption(this)">
+                <div class="quiz-option-radio"></div>
+                <span>You have to manually register each file as a route in a config file</span>
+              </button>
+              <button class="quiz-option" data-value="option-b" onclick="selectOption(this)">
+                <div class="quiz-option-radio"></div>
+                <span>The file path becomes the URL automatically — server/api/discourse/latest.get.ts → GET /api/discourse/latest</span>
+              </button>
+              <button class="quiz-option" data-value="option-c" onclick="selectOption(this)">
+                <div class="quiz-option-radio"></div>
+                <span>It only works if you import it in the main server file</span>
+              </button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+
+          <button class="quiz-check-btn" onclick="checkQuiz('quiz-module2')">Check Answer</button>
+          <button class="quiz-reset-btn" onclick="resetQuiz('quiz-module2')">Try Again</button>
+        </div>
+      </div>
+
+    </section>
+    <section class="module" id="module-3">
+
+      <!-- ── Screen 1: The Problem with Polling ─────────────────────── -->
+      <div class="module-screen">
+        <div class="module-number">03</div>
+        <h2 class="module-title">Always Fresh</h2>
+        <p class="module-subtitle">The live update engine — SSE, caching, and the event bus</p>
+
+        <p style="margin-top: var(--space-6)">Most dashboards get "live" data the lazy way: they ask the server for new data every 30 seconds. This is called <span class="term" data-definition="Polling means the browser repeatedly asks the server: 'anything new? anything new? anything new?' — on a timer. It works but it's wasteful — most of the time the answer is no, and you've wasted a round trip.">polling</span>, and it's expensive and slow.</p>
+
+        <div class="callout callout-accent" style="margin-top: var(--space-6)">
+          <div class="callout-icon">📻</div>
+          <div class="callout-content">
+            <strong class="callout-title">The radio station model</strong>
+            <p>This dashboard works like a radio station instead. The server <em>broadcasts</em> updates when it has something new. The browser just listens. No constant nagging. The moment data changes, every connected browser gets it simultaneously — without asking.</p>
+          </div>
+        </div>
+
+        <p style="margin-top: var(--space-6)">This is achieved with three interlocking systems: the <strong>SSE stream</strong>, the <strong>in-memory cache</strong>, and the <strong>event bus</strong>. Let's look at each one.</p>
+      </div>
+
+      <!-- ── Screen 2: The Cache ─────────────────────────────────────── -->
+      <div class="module-screen">
+        <h3 class="screen-title">System 1: The in-memory cache</h3>
+        <p>Every API route has its own <span class="term" data-definition="A cache is a temporary storage of a result so you don't have to compute or fetch it again. Like keeping leftovers in the fridge — instead of cooking from scratch every time, you reheat what's already there.">cache</span>. When Nitro fetches data from Discourse, it stores the result in memory with a timer. If another request comes in before the timer expires, it returns the cached copy instead of calling Discourse again.</p>
+
+        <div class="translation-block animate-in">
+          <div class="translation-code">
+            <span class="translation-label">CODE — server/utils/cache.ts</span>
+            <pre><code>
+<span class="code-line"><span class="code-keyword">export function</span> <span class="code-function">createCache</span>&lt;T&gt;(ttlMs: <span class="code-keyword">number</span>) {</span>
+<span class="code-line">  <span class="code-keyword">let</span> data: T | <span class="code-keyword">null</span> = <span class="code-keyword">null</span></span>
+<span class="code-line">  <span class="code-keyword">let</span> timestamp: <span class="code-keyword">number</span> | <span class="code-keyword">null</span> = <span class="code-keyword">null</span></span>
+<span class="code-line">  <span class="code-keyword">return</span> {</span>
+<span class="code-line">    <span class="code-function">isFresh</span>() {</span>
+<span class="code-line">      <span class="code-keyword">return</span> data !== <span class="code-keyword">null</span> &&</span>
+<span class="code-line">        (Date.<span class="code-function">now</span>() - timestamp!) &lt; ttlMs</span>
+<span class="code-line">    },</span>
+<span class="code-line">    <span class="code-function">get</span>() { <span class="code-keyword">return</span> data },</span>
+<span class="code-line">    <span class="code-function">set</span>(val: T) {</span>
+<span class="code-line">      data = val</span>
+<span class="code-line">      timestamp = Date.<span class="code-function">now</span>()</span>
+<span class="code-line">    }</span>
+<span class="code-line">  }</span>
+<span class="code-line">}</span>
+            </code></pre>
+          </div>
+          <div class="translation-english">
+            <span class="translation-label">PLAIN ENGLISH</span>
+            <div class="translation-lines">
+              <p class="tl">Create a cache that holds data of type T for ttlMs milliseconds.</p>
+              <p class="tl">The data holder — starts empty.</p>
+              <p class="tl">The timestamp — when we last filled it.</p>
+              <p class="tl">Return a small toolkit with three tools:</p>
+              <p class="tl">isFresh: Is the data still good? Check if we have data…</p>
+              <p class="tl">…and if it's younger than the expiry time.</p>
+              <p class="tl"> </p>
+              <p class="tl">get: Just hand back whatever's stored.</p>
+              <p class="tl">set: Store new data and record the current time as the fresh timestamp.</p>
+              <p class="tl"> </p>
+              <p class="tl"> </p>
+              <p class="tl"> </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="badge-list" style="margin-top: var(--space-6)">
+          <div class="badge-item">
+            <code class="badge-code">5 min</code>
+            <span class="badge-desc">Discourse topics, Pinboard, Meetings — active conversation data</span>
+          </div>
+          <div class="badge-item">
+            <code class="badge-code">2 min</code>
+            <span class="badge-desc">Matrix chat — faster refresh because chat moves quickly</span>
+          </div>
+          <div class="badge-item">
+            <code class="badge-code">30 min</code>
+            <span class="badge-desc">Blog articles, YouTube videos, Instagram — changes rarely</span>
+          </div>
+          <div class="badge-item">
+            <code class="badge-code">No cache</code>
+            <span class="badge-desc">Pinboard writes — always fresh, because you just changed it</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Screen 3: The Event Bus ─────────────────────────────────── -->
+      <div class="module-screen">
+        <h3 class="screen-title">System 2: The event bus</h3>
+        <p>When a Nitro API route fetches fresh data, it needs to tell the SSE stream so it can broadcast to all connected browsers. But how does one part of the server talk to another? Through an <span class="term" data-definition="An event bus is a shared message board inside a program. One part posts a message ('hey, I have new data!') and any other part that cares can read it — without either side needing to know about the other directly.">event bus</span>.</p>
+
+        <div class="translation-block animate-in">
+          <div class="translation-code">
+            <span class="translation-label">CODE — server/utils/eventBus.ts</span>
+            <pre><code>
+<span class="code-line"><span class="code-keyword">import</span> { EventEmitter } <span class="code-keyword">from</span> <span class="code-string">'node:events'</span></span>
+<span class="code-line"></span>
+<span class="code-line"><span class="code-keyword">const</span> eventBus = <span class="code-keyword">new</span> <span class="code-function">EventEmitter</span>()</span>
+<span class="code-line">eventBus.<span class="code-function">setMaxListeners</span>(50)</span>
+<span class="code-line"></span>
+<span class="code-line"><span class="code-keyword">export default</span> eventBus</span>
+            </code></pre>
+          </div>
+          <div class="translation-english">
+            <span class="translation-label">PLAIN ENGLISH</span>
+            <div class="translation-lines">
+              <p class="tl">Use Node.js's built-in message board system.</p>
+              <p class="tl"> </p>
+              <p class="tl">Create the shared message board.</p>
+              <p class="tl">Allow up to 50 listeners — prevents false "memory leak" warnings.</p>
+              <p class="tl"> </p>
+              <p class="tl">Share this one message board with the whole server.</p>
+            </div>
+          </div>
+        </div>
+
+        <p style="margin-top: var(--space-6)">Here's how it's used in practice. The Discourse API route fetches new topics, then <em>posts</em> to the event bus:</p>
+
+        <div class="translation-block animate-in">
+          <div class="translation-code">
+            <span class="translation-label">CODE — server/api/discourse/latest.get.ts</span>
+            <pre><code>
+<span class="code-line"><span class="code-keyword">const</span> payload = {</span>
+<span class="code-line">  source: <span class="code-string">'live'</span>,</span>
+<span class="code-line">  topics: transformed</span>
+<span class="code-line">}</span>
+<span class="code-line">eventBus.<span class="code-function">emit</span>(<span class="code-string">'discourse'</span>, payload)</span>
+<span class="code-line"><span class="code-keyword">return</span> payload</span>
+            </code></pre>
+          </div>
+          <div class="translation-english">
+            <span class="translation-label">PLAIN ENGLISH</span>
+            <div class="translation-lines">
+              <p class="tl">Package up the result.</p>
+              <p class="tl">Label it as real live data (not mock or cached).</p>
+              <p class="tl">Include the freshly fetched topics.</p>
+              <p class="tl"> </p>
+              <p class="tl">Post the message "discourse" to the shared board with this payload.</p>
+              <p class="tl">Also return the data to whoever called this function directly.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Screen 4: The SSE Stream ────────────────────────────────── -->
+      <div class="module-screen">
+        <h3 class="screen-title">System 3: The SSE stream</h3>
+        <p>The SSE stream (<code>server/api/events/stream.get.ts</code>) is the hub. It listens on the event bus and broadcasts to every connected browser. It also starts background timers that trigger periodic refreshes automatically.</p>
+
+        <div class="translation-block animate-in">
+          <div class="translation-code">
+            <span class="translation-label">CODE — server/api/events/stream.get.ts (excerpt)</span>
+            <pre><code>
+<span class="code-line"><span class="code-comment">// Wire bus events to broadcast</span></span>
+<span class="code-line">eventBus.<span class="code-function">on</span>(<span class="code-string">'discourse'</span>, (data) =></span>
+<span class="code-line">  <span class="code-function">broadcast</span>(<span class="code-string">'discourse'</span>, data)</span>
+<span class="code-line">)</span>
+<span class="code-line"></span>
+<span class="code-line"><span class="code-comment">// Background refresh timers</span></span>
+<span class="code-line"><span class="code-function">setInterval</span>(</span>
+<span class="code-line">  () => <span class="code-function">fetchLatestTopics</span>(),</span>
+<span class="code-line">  <span class="code-number">5</span> * <span class="code-number">60</span> * <span class="code-number">1000</span> <span class="code-comment">// 5 min</span></span>
+<span class="code-line">)</span>
+            </code></pre>
+          </div>
+          <div class="translation-english">
+            <span class="translation-label">PLAIN ENGLISH</span>
+            <div class="translation-lines">
+              <p class="tl">Subscribe to the "discourse" message on the event bus.</p>
+              <p class="tl">Whenever a "discourse" message arrives from anywhere in the server…</p>
+              <p class="tl">…immediately send it to every connected browser.</p>
+              <p class="tl"> </p>
+              <p class="tl"> </p>
+              <p class="tl">Set up a repeating timer.</p>
+              <p class="tl">Every 5 minutes, go fetch the latest Discourse topics.</p>
+              <p class="tl">5 × 60 × 1000 = 5 minutes in milliseconds.</p>
+              <p class="tl"> </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="callout callout-accent" style="margin-top: var(--space-6)">
+          <div class="callout-icon">💡</div>
+          <div class="callout-content">
+            <strong class="callout-title">Why this design is clever</strong>
+            <p>The timer runs <em>on the server</em>, not in each browser. So even if 200 members have the dashboard open, Discourse only gets asked for new data once every 5 minutes — not 200 times. Everyone's browser gets the same broadcast simultaneously. This is called a <span class="term" data-definition="A fan-out pattern sends one piece of data to many recipients at once — like one radio broadcast reaching thousands of radios. The opposite (sending to each recipient individually) is a fan-in.">fan-out</span> pattern.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Screen 5: Full Picture Animation ───────────────────────── -->
+      <div class="module-screen">
+        <h3 class="screen-title">The full live update loop</h3>
+        <p>Now let's watch all three systems — timer, event bus, and SSE stream — work together to push a fresh forum update to your browser.</p>
+
+        <div class="flow-animation" data-steps='[
+          {"highlight":"flow-actor-1","label":"The 5-minute timer fires on the server — time to refresh Discourse topics"},
+          {"highlight":"flow-actor-1","label":"fetchLatestTopics() checks the cache — it is stale, so it calls Discourse","packet":true,"from":"actor-1","to":"actor-2"},
+          {"highlight":"flow-actor-2","label":"Discourse returns fresh topics — 10 latest from the configured categories"},
+          {"highlight":"flow-actor-1","label":"Nitro stores the result in cache, then emits discourse on the event bus","packet":true,"from":"actor-2","to":"actor-1"},
+          {"highlight":"flow-actor-3","label":"The SSE stream hears the event bus and broadcasts to all connected browsers","packet":true,"from":"actor-1","to":"actor-3"},
+          {"highlight":"flow-actor-3","label":"Each browser receives the new data — the Discussions panel re-renders instantly"}
+        ]'>
+          <div class="flow-actors">
+            <div class="flow-actor" id="flow-actor-1">
+              <div class="flow-actor-icon">⚡</div>
+              <span>Nitro + Timer</span>
+            </div>
+            <div class="flow-actor" id="flow-actor-2">
+              <div class="flow-actor-icon">🗣️</div>
+              <span>Discourse API</span>
+            </div>
+            <div class="flow-actor" id="flow-actor-3">
+              <div class="flow-actor-icon">🌐</div>
+              <span>All Browsers</span>
+            </div>
+          </div>
+
+          <div class="flow-packet" id="flow-packet"></div>
+          <div class="flow-step-label" id="flow-label">Click "Next Step" to begin</div>
+
+          <div class="flow-controls">
+            <button class="btn flow-next-btn">Next Step</button>
+            <button class="btn flow-reset-btn">Restart</button>
+            <span class="flow-progress"></span>
+          </div>
+        </div>
+
+        <div class="quiz-container" id="quiz-module3" style="margin-top: var(--space-8)">
+          <div class="quiz-question-block"
+               data-correct="option-a"
+               data-explanation-right="Correct. The timer runs once on the server, data is fetched once, then broadcast to all browsers simultaneously. 200 users = 1 API call."
+               data-explanation-wrong="Think about where the timer runs — in the server, not in each browser. How many times does Discourse get called?">
+            <h3 class="quiz-question">200 members have the dashboard open. The 5-minute timer fires. How many times does Discourse get called?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" onclick="selectOption(this)">
+                <div class="quiz-option-radio"></div>
+                <span>Once — the server fetches and broadcasts to everyone simultaneously</span>
+              </button>
+              <button class="quiz-option" data-value="option-b" onclick="selectOption(this)">
+                <div class="quiz-option-radio"></div>
+                <span>200 times — once per connected browser</span>
+              </button>
+              <button class="quiz-option" data-value="option-c" onclick="selectOption(this)">
+                <div class="quiz-option-radio"></div>
+                <span>It depends on whether the cache is fresh or stale</span>
+              </button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+
+          <button class="quiz-check-btn" onclick="checkQuiz('quiz-module3')">Check Answer</button>
+          <button class="quiz-reset-btn" onclick="resetQuiz('quiz-module3')">Try Again</button>
+        </div>
+      </div>
+
+    </section>
+    <section class="module" id="module-4">
+
+      <!-- ── Screen 1: The Source of Truth ──────────────────────────── -->
+      <div class="module-screen">
+        <div class="module-number">04</div>
+        <h2 class="module-title">Discourse as the Backbone</h2>
+        <p class="module-subtitle">Why one forum becomes the source of truth for everything</p>
+
+        <p style="margin-top: var(--space-6)">Most dashboards keep data in a separate database. This one doesn't. Instead, <span class="term" data-definition="Discourse is an open-source forum platform — like Reddit but self-hosted and fully controlled by your organisation. It has categories, topics, posts, tags, and a full REST API.">Discourse</span> serves as the <span class="term" data-definition="A single source of truth is one definitive place where data lives. Every other system reads from it. This prevents the problem of having the same data in two places that drift out of sync.">single source of truth</span> for almost all written content in the dashboard.</p>
+
+        <div class="icon-rows" style="margin-top: var(--space-6)">
+          <div class="icon-row">
+            <div class="icon-circle" style="background: var(--color-actor-1)">🗣️</div>
+            <div>
+              <strong>Discussions panel</strong>
+              <p>Reads from Discourse categories you configure — shows latest topics with excerpts, reply counts, and timestamps.</p>
+            </div>
+          </div>
+          <div class="icon-row">
+            <div class="icon-circle" style="background: var(--color-actor-2)">📌</div>
+            <div>
+              <strong>Announcements (Pinboard) panel</strong>
+              <p>Reads from a special Discourse category — AND can write back to it, creating real Discourse topics when you post an announcement.</p>
+            </div>
+          </div>
+          <div class="icon-row">
+            <div class="icon-circle" style="background: var(--color-actor-3)">📅</div>
+            <div>
+              <strong>Meetings panel</strong>
+              <p>Reads from a separate Discourse category designated for meeting notes and agendas.</p>
+            </div>
+          </div>
+          <div class="icon-row">
+            <div class="icon-circle" style="background: var(--color-actor-4)">📄</div>
+            <div>
+              <strong>Key Docs panel</strong>
+              <p>Reads from yet another Discourse category — for reference documents and policies.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Screen 2: Why Discourse ─────────────────────────────────── -->
+      <div class="module-screen">
+        <h3 class="screen-title">Why not just use a database?</h3>
+
+        <div class="callout callout-accent" style="margin-top: var(--space-2)">
+          <div class="callout-icon">🏛️</div>
+          <div class="callout-content">
+            <strong class="callout-title">Discourse is a database — with superpowers</strong>
+            <p>A traditional database is just storage. Discourse gives you storage <em>plus</em> moderation tools, search, notifications, user accounts, edit history, and an existing community already living there. Why build all that from scratch?</p>
+          </div>
+        </div>
+
+        <div class="step-cards" style="margin-top: var(--space-6)">
+          <div class="step-card">
+            <div class="step-num">✓</div>
+            <div class="step-body">
+              <strong>Everything is auditable</strong>
+              <p>Every announcement, meeting note, and key doc has a full edit history in Discourse. Who wrote it, when, and what changed.</p>
+            </div>
+          </div>
+          <div class="step-card">
+            <div class="step-num">✓</div>
+            <div class="step-body">
+              <strong>Moderation is built in</strong>
+              <p>Discourse has user roles, category permissions, and spam protection. The dashboard inherits all of that for free.</p>
+            </div>
+          </div>
+          <div class="step-card">
+            <div class="step-num">✓</div>
+            <div class="step-body">
+              <strong>Self-hosted and open-source</strong>
+              <p>Unlike Slack or Notion, Discourse can run on your own server. Your organisation owns all its data.</p>
+            </div>
+          </div>
+          <div class="step-card">
+            <div class="step-num">✓</div>
+            <div class="step-body">
+              <strong>The dashboard degrades gracefully</strong>
+              <p>If Discourse isn't configured, every panel falls back to realistic mock data. Nothing breaks — it just shows example content.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Screen 3: The Discourse Request Helper ──────────────────── -->
+      <div class="module-screen">
+        <h3 class="screen-title">How Nitro talks to Discourse</h3>
+        <p>Every API route that needs Discourse data goes through a shared helper function in <code>server/utils/discourse.ts</code>. This keeps credentials in one place and makes every API call consistent.</p>
+
+        <div class="translation-block animate-in">
+          <div class="translation-code">
+            <span class="translation-label">CODE — server/utils/discourse.ts</span>
+            <pre><code>
+<span class="code-line"><span class="code-keyword">export async function</span> <span class="code-function">discourseRequest</span>&lt;T&gt;(</span>
+<span class="code-line">  path: <span class="code-keyword">string</span>,</span>
+<span class="code-line">  method = <span class="code-string">'GET'</span></span>
+<span class="code-line">) {</span>
+<span class="code-line">  <span class="code-keyword">const</span> config = <span class="code-function">useRuntimeConfig</span>()</span>
+<span class="code-line">  <span class="code-keyword">const</span> url = <span class="code-keyword">new</span> <span class="code-function">URL</span>(path, config.discourseUrl)</span>
+<span class="code-line">  <span class="code-keyword">const</span> headers = {</span>
+<span class="code-line">    <span class="code-string">'Api-Key'</span>: config.discourseApiKey,</span>
+<span class="code-line">    <span class="code-string">'Api-Username'</span>: config.discourseApiUsername</span>
+<span class="code-line">  }</span>
+<span class="code-line">  <span class="code-keyword">return await</span> <span class="code-function">$fetch</span>&lt;T&gt;(url.<span class="code-function">toString</span>(), {</span>
+<span class="code-line">    method, headers, timeout: <span class="code-number">8000</span></span>
+<span class="code-line">  })</span>
+<span class="code-line">}</span>
+            </code></pre>
+          </div>
+          <div class="translation-english">
+            <span class="translation-label">PLAIN ENGLISH</span>
+            <div class="translation-lines">
+              <p class="tl">A reusable function that makes one HTTP request to Discourse.</p>
+              <p class="tl">You provide a path like /c/5/l/latest.json…</p>
+              <p class="tl">…and optionally the method (GET by default).</p>
+              <p class="tl"> </p>
+              <p class="tl">Pull the server-side config (env vars, invisible to the browser).</p>
+              <p class="tl">Build the full URL by combining the Discourse base URL + the path.</p>
+              <p class="tl">Prepare the authentication headers — the API key and username.</p>
+              <p class="tl">These prove to Discourse that this request is from an authorised source.</p>
+              <p class="tl"> </p>
+              <p class="tl">Make the HTTP request and wait for the response.</p>
+              <p class="tl">Give up after 8 seconds if Discourse doesn't respond.</p>
+              <p class="tl"> </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Screen 4: The Pinboard Write-Back ──────────────────────── -->
+      <div class="module-screen">
+        <h3 class="screen-title">Writing back: the Pinboard</h3>
+        <p>The Pinboard (Announcements) panel is special — it's the only panel that can <em>write</em> data, not just read it. When an organiser posts a new announcement, the dashboard creates a real Discourse topic in the designated category.</p>
+
+        <div class="chat-window" id="chat-module4">
+          <div class="chat-messages">
+            <div class="chat-message" data-msg="0" data-sender="organiser" style="display:none">
+              <div class="chat-avatar" style="background: var(--color-actor-1)">👤</div>
+              <div class="chat-bubble">
+                <span class="chat-sender" style="color: var(--color-actor-1)">Organiser</span>
+                <p>POST /api/pinboard with body: "Urgent: volunteers needed Saturday"</p>
+              </div>
+            </div>
+            <div class="chat-message" data-msg="1" data-sender="nitro" style="display:none">
+              <div class="chat-avatar" style="background: var(--color-actor-2)">⚡</div>
+              <div class="chat-bubble">
+                <span class="chat-sender" style="color: var(--color-actor-2)">Nitro Server</span>
+                <p>Checking the Authorization header… Bearer token matches NUXT_PINBOARD_SECRET ✓</p>
+              </div>
+            </div>
+            <div class="chat-message" data-msg="2" data-sender="nitro" style="display:none">
+              <div class="chat-avatar" style="background: var(--color-actor-2)">⚡</div>
+              <div class="chat-bubble">
+                <span class="chat-sender" style="color: var(--color-actor-2)">Nitro Server</span>
+                <p>Sending POST to Discourse: create topic in pinboard category #5…</p>
+              </div>
+            </div>
+            <div class="chat-message" data-msg="3" data-sender="discourse" style="display:none">
+              <div class="chat-avatar" style="background: var(--color-actor-3)">🗣️</div>
+              <div class="chat-bubble">
+                <span class="chat-sender" style="color: var(--color-actor-3)">Discourse</span>
+                <p>Topic created! ID: 12345. It's live in the forum now.</p>
+              </div>
+            </div>
+            <div class="chat-message" data-msg="4" data-sender="nitro" style="display:none">
+              <div class="chat-avatar" style="background: var(--color-actor-2)">⚡</div>
+              <div class="chat-bubble">
+                <span class="chat-sender" style="color: var(--color-actor-2)">Nitro Server</span>
+                <p>Cache cleared. Re-fetching pinboard… emitting to event bus… SSE broadcasting to all browsers.</p>
+              </div>
+            </div>
+            <div class="chat-message" data-msg="5" data-sender="browser" style="display:none">
+              <div class="chat-avatar" style="background: var(--color-actor-4)">🌐</div>
+              <div class="chat-bubble">
+                <span class="chat-sender" style="color: var(--color-actor-4)">All Browsers</span>
+                <p>New announcement appearing in the Pinboard panel for everyone — instantly!</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="chat-typing" style="display:none">
+            <div class="chat-avatar">?</div>
+            <div class="chat-typing-dots">
+              <span class="typing-dot"></span>
+              <span class="typing-dot"></span>
+              <span class="typing-dot"></span>
+            </div>
+          </div>
+
+          <div class="chat-controls">
+            <button class="btn chat-next-btn">Next Message</button>
+            <button class="btn chat-all-btn">Play All</button>
+            <button class="btn chat-reset-btn">Replay</button>
+            <span class="chat-progress"></span>
+          </div>
+        </div>
+
+        <div class="callout callout-info" style="margin-top: var(--space-6)">
+          <div class="callout-icon">🔑</div>
+          <div class="callout-content">
+            <strong class="callout-title">Authentication with a bearer token</strong>
+            <p>The pinboard API is protected with a <span class="term" data-definition="A bearer token is a secret password sent in the Authorization header of an HTTP request. 'Bearer' just means 'whoever has this token is authorized.' Like a wristband at a venue — whoever wears it gets in.">bearer token</span>. The <code>NUXT_PINBOARD_SECRET</code> env var holds the secret — you generate it with <code>openssl rand -hex 32</code>. No token, no write access.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Screen 5: Quiz ─────────────────────────────────────────── -->
+      <div class="module-screen">
+        <h3 class="screen-title">Check your understanding</h3>
+
+        <div class="quiz-container" id="quiz-module4">
+          <div class="quiz-question-block"
+               data-correct="option-c"
+               data-explanation-right="Exactly. The dashboard is a thin layer on top of Discourse. The actual content lives in Discourse — the dashboard just surfaces and displays it. This means you get Discourse moderation, search, and history for free."
+               data-explanation-wrong="Think about where announcements and discussions actually live — which system stores them long-term?">
+            <h3 class="quiz-question">An organiser posts a new announcement through the dashboard. Where is the announcement actually stored?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" onclick="selectOption(this)">
+                <div class="quiz-option-radio"></div>
+                <span>In a database that the dashboard manages directly</span>
+              </button>
+              <button class="quiz-option" data-value="option-b" onclick="selectOption(this)">
+                <div class="quiz-option-radio"></div>
+                <span>In the server's in-memory cache</span>
+              </button>
+              <button class="quiz-option" data-value="option-c" onclick="selectOption(this)">
+                <div class="quiz-option-radio"></div>
+                <span>As a Discourse topic in the configured pinboard category</span>
+              </button>
+              <button class="quiz-option" data-value="option-d" onclick="selectOption(this)">
+                <div class="quiz-option-radio"></div>
+                <span>In a local JSON file on the server</span>
+              </button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+
+          <div class="quiz-question-block"
+               data-correct="option-b"
+               data-explanation-right="Right. The API key goes in environment variables, not in code. Code is often public (version control, CI logs). Secrets in code are the #1 source of security incidents."
+               data-explanation-wrong="Think about what would happen if the API key were in the source code — if the code is on GitHub, anyone can see it.">
+            <h3 class="quiz-question">The dashboard needs a Discourse API key. Where should it be stored?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" onclick="selectOption(this)">
+                <div class="quiz-option-radio"></div>
+                <span>Directly in discourse.ts — it's server-only code so it's safe</span>
+              </button>
+              <button class="quiz-option" data-value="option-b" onclick="selectOption(this)">
+                <div class="quiz-option-radio"></div>
+                <span>In environment variables (NUXT_DISCOURSE_API_KEY) set in Netlify's dashboard, never in code</span>
+              </button>
+              <button class="quiz-option" data-value="option-c" onclick="selectOption(this)">
+                <div class="quiz-option-radio"></div>
+                <span>In a config file committed to the repository</span>
+              </button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+
+          <button class="quiz-check-btn" onclick="checkQuiz('quiz-module4')">Check Answers</button>
+          <button class="quiz-reset-btn" onclick="resetQuiz('quiz-module4')">Try Again</button>
+        </div>
+      </div>
+
+    </section>
+    <section class="module" id="module-5">
+
+      <!-- ── Screen 1: Intro ────────────────────────────────────────── -->
+      <div class="module-screen">
+        <div class="module-number">05</div>
+        <h2 class="module-title">Make It Your Own</h2>
+        <p class="module-subtitle">Panel visibility, colour themes, localStorage, and zero-code configuration</p>
+
+        <p style="margin-top: var(--space-6)">One of the cleverest things about this dashboard is how much users can customise without touching code — and how much you can configure without touching code either. This module explains the three layers of customisation.</p>
+
+        <div class="pattern-cards" style="margin-top: var(--space-6)">
+          <div class="pattern-card" style="border-top: 3px solid var(--color-actor-1)">
+            <div class="pattern-icon" style="background: var(--color-actor-1)">👤</div>
+            <h4 class="pattern-title">User preferences</h4>
+            <p class="pattern-desc">Panel visibility, colour theme, text size — saved per device in localStorage</p>
+          </div>
+          <div class="pattern-card" style="border-top: 3px solid var(--color-actor-2)">
+            <div class="pattern-icon" style="background: var(--color-actor-2)">⚙️</div>
+            <h4 class="pattern-title">Operator config</h4>
+            <p class="pattern-desc">Org name, colours, Discourse URL, API keys — set via environment variables</p>
+          </div>
+          <div class="pattern-card" style="border-top: 3px solid var(--color-actor-3)">
+            <div class="pattern-icon" style="background: var(--color-actor-3)">📢</div>
+            <h4 class="pattern-title">Announcements</h4>
+            <p class="pattern-desc">Priority banners — edited by changing a JSON file on GitHub, no code needed</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Screen 2: localStorage ──────────────────────────────────── -->
+      <div class="module-screen">
+        <h3 class="screen-title">localStorage: your browser's sticky note pad</h3>
+        <p><span class="term" data-definition="localStorage is a small storage space in your browser — like a sticky note on your computer. JavaScript can read and write key-value pairs there. The data persists across sessions and page refreshes, but only for that browser on that device. It's not synced to the server.">localStorage</span> is how the dashboard remembers your preferences. No account required. No server round-trip. Everything stays on your device.</p>
+
+        <div class="badge-list" style="margin-top: var(--space-6)">
+          <div class="badge-item">
+            <code class="badge-code">panel-visibility-v1</code>
+            <span class="badge-desc">Which of the 8 panels you have switched on or off</span>
+          </div>
+          <div class="badge-item">
+            <code class="badge-code">dash-color-theme</code>
+            <span class="badge-desc">Your chosen colour theme: coffee, forest, tokyo, or dyslexic</span>
+          </div>
+          <div class="badge-item">
+            <code class="badge-code">dash-font-size</code>
+            <span class="badge-desc">Your text size preference: 16px, 18px, or 20px</span>
+          </div>
+          <div class="badge-item">
+            <code class="badge-code">announcement-dismissed-{hash}</code>
+            <span class="badge-desc">Whether you dismissed a particular announcement (keyed by content hash)</span>
+          </div>
+        </div>
+
+        <div class="callout callout-info" style="margin-top: var(--space-6)">
+          <div class="callout-icon">💡</div>
+          <div class="callout-content">
+            <strong class="callout-title">The version number trick</strong>
+            <p>Notice <code>panel-visibility-v1</code> has a version number. When the developer changes the default panels, they bump it to <code>panel-visibility-v2</code>. Existing users' saved preferences are ignored — they get a clean start with the new defaults. This is a standard pattern for breaking changes in user-facing storage.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Screen 3: Panel Visibility Code ────────────────────────── -->
+      <div class="module-screen">
+        <h3 class="screen-title">How panel toggling actually works</h3>
+        <p>When you click a panel toggle in the sidebar, here's what happens. The magic is <code>v-if</code> — panels that are off are completely removed from the browser, not just hidden.</p>
+
+        <div class="translation-block animate-in">
+          <div class="translation-code">
+            <span class="translation-label">CODE — app/composables/usePanelVisibility.ts</span>
+            <pre><code>
+<span class="code-line"><span class="code-keyword">function</span> <span class="code-function">toggle</span>(id: PanelId) {</span>
+<span class="code-line">  <span class="code-keyword">const</span> currentlyOn = visibility.value[id]</span>
+<span class="code-line">  <span class="code-keyword">if</span> (currentlyOn && !<span class="code-function">canToggleOff</span>(id))</span>
+<span class="code-line">    <span class="code-keyword">return</span></span>
+<span class="code-line"></span>
+<span class="code-line">  visibility.value = {</span>
+<span class="code-line">    ...visibility.value,</span>
+<span class="code-line">    [id]: !currentlyOn</span>
+<span class="code-line">  }</span>
+<span class="code-line">  <span class="code-function">saveToStorage</span>(visibility.value)</span>
+<span class="code-line">}</span>
+            </code></pre>
+          </div>
+          <div class="translation-english">
+            <span class="translation-label">PLAIN ENGLISH</span>
+            <div class="translation-lines">
+              <p class="tl">Function to toggle one panel on or off.</p>
+              <p class="tl">Check if the panel is currently on.</p>
+              <p class="tl">If it's on, and turning it off would leave fewer than 5 panels…</p>
+              <p class="tl">…stop. The minimum is enforced, no error thrown.</p>
+              <p class="tl"> </p>
+              <p class="tl">Otherwise, create a new state object.</p>
+              <p class="tl">Copy all current on/off values (the ... spread)…</p>
+              <p class="tl">…but flip this panel's value to the opposite of what it was.</p>
+              <p class="tl">Immediately save to localStorage so it persists after a refresh.</p>
+              <p class="tl"> </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="callout callout-accent" style="margin-top: var(--space-6)">
+          <div class="callout-icon">💡</div>
+          <div class="callout-content">
+            <strong class="callout-title">v-if vs v-show — a critical difference</strong>
+            <p><code>v-if="false"</code> completely removes the element from the browser — as if it never existed. No API calls fire, no SSE updates are processed. <code>v-show="false"</code> just hides it with CSS but the code still runs. The dashboard uses <code>v-if</code> deliberately — turning off a panel genuinely stops all background activity for it. This is the right call for performance.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Screen 4: Colour Themes ────────────────────────────────── -->
+      <div class="module-screen">
+        <h3 class="screen-title">Four colour themes — loaded on demand</h3>
+        <p>The "Your Style" panel offers four colour themes. Most are just CSS — but the Dyslexic theme has a clever trick: it loads the OpenDyslexic font <em>only</em> when selected, rather than adding it to every page load.</p>
+
+        <div class="translation-block animate-in">
+          <div class="translation-code">
+            <span class="translation-label">CODE — app/composables/useColorTheme.ts</span>
+            <pre><code>
+<span class="code-line"><span class="code-keyword">function</span> <span class="code-function">applyTheme</span>(theme: ColorThemeName) {</span>
+<span class="code-line">  <span class="code-keyword">const</span> html = document.documentElement</span>
+<span class="code-line">  <span class="code-keyword">if</span> (theme === <span class="code-string">'coffee'</span>) {</span>
+<span class="code-line">    html.<span class="code-function">removeAttribute</span>(<span class="code-string">'data-color-theme'</span>)</span>
+<span class="code-line">  } <span class="code-keyword">else</span> {</span>
+<span class="code-line">    html.<span class="code-function">setAttribute</span>(</span>
+<span class="code-line">      <span class="code-string">'data-color-theme'</span>, theme</span>
+<span class="code-line">    )</span>
+<span class="code-line">  }</span>
+<span class="code-line">  <span class="code-keyword">if</span> (theme === <span class="code-string">'dyslexic'</span>) {</span>
+<span class="code-line">    <span class="code-function">loadDyslexicFont</span>()</span>
+<span class="code-line">  }</span>
+<span class="code-line">}</span>
+            </code></pre>
+          </div>
+          <div class="translation-english">
+            <span class="translation-label">PLAIN ENGLISH</span>
+            <div class="translation-lines">
+              <p class="tl">Function that switches the colour theme.</p>
+              <p class="tl">Get the root HTML element — the entire page hangs off this.</p>
+              <p class="tl">If the theme is "coffee" (the default)…</p>
+              <p class="tl">…remove any theme attribute — CSS defaults take over.</p>
+              <p class="tl">For any other theme…</p>
+              <p class="tl">…stamp a data-color-theme attribute on the HTML tag.</p>
+              <p class="tl">CSS rules like [data-color-theme="forest"] { ... } then kick in.</p>
+              <p class="tl"> </p>
+              <p class="tl">Special case: if Dyslexic is chosen…</p>
+              <p class="tl">…load the OpenDyslexic font from an external CDN — only now, on demand.</p>
+              <p class="tl"> </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="callout callout-info" style="margin-top: var(--space-4)">
+          <div class="callout-icon">💡</div>
+          <div class="callout-content">
+            <strong class="callout-title">Lazy loading — load things only when needed</strong>
+            <p><span class="term" data-definition="Lazy loading means delaying the loading of a resource until it's actually needed. The opposite is eager loading — loading everything upfront. Lazy loading makes pages load faster by not downloading things most users will never use.">Lazy loading</span> the font means most users (99%+ won't choose the Dyslexic theme) never download it. This is a good pattern to ask AI for: "only load this resource when the user activates this feature."</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Screen 5: The Priority Announcement Banner ──────────────── -->
+      <div class="module-screen">
+        <h3 class="screen-title">The priority announcement banner</h3>
+        <p>There's a special panel that bypasses all user preferences — the Priority Announcement Banner. It's for genuine emergencies. An organiser can post one by editing a single JSON file on GitHub.</p>
+
+        <div class="pattern-cards" style="margin-top: var(--space-4)">
+          <div class="pattern-card" style="border-top: 3px solid #3B82F6">
+            <div class="pattern-icon" style="background: #3B82F6">ℹ️</div>
+            <h4 class="pattern-title">info</h4>
+            <p class="pattern-desc">Blue banner. Dismissable — user can close it. Reappears if content changes.</p>
+          </div>
+          <div class="pattern-card" style="border-top: 3px solid #F59E0B">
+            <div class="pattern-icon" style="background: #F59E0B">⚠️</div>
+            <h4 class="pattern-title">warning</h4>
+            <p class="pattern-desc">Amber banner. Dismissable, same as info.</p>
+          </div>
+          <div class="pattern-card" style="border-top: 3px solid #EF4444">
+            <div class="pattern-icon" style="background: #EF4444">🚨</div>
+            <h4 class="pattern-title">urgent</h4>
+            <p class="pattern-desc">Red banner. <strong>Not dismissable</strong> — stays until the operator sets enabled: false.</p>
+          </div>
+        </div>
+
+        <div class="callout callout-accent" style="margin-top: var(--space-6)">
+          <div class="callout-icon">🔑</div>
+          <div class="callout-content">
+            <strong class="callout-title">The dismiss hash trick</strong>
+            <p>If a user dismissed an announcement, the dashboard stores a <span class="term" data-definition="A hash is a short, fixed-length fingerprint of some data. Same input always gives the same output. Change even one character of the input and you get a completely different output. Used here to detect when announcement content has changed.">hash</span> of its content in localStorage. If the announcement text changes, the hash changes — and the "dismissed" record no longer matches, so the banner reappears for everyone who had dismissed the previous version. Smart!</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Screen 6: Zero-Code Config + Quiz ──────────────────────── -->
+      <div class="module-screen">
+        <h3 class="screen-title">Zero-code configuration</h3>
+        <p>The whole dashboard is designed to be deployed by non-engineers. All visible content — org name, colours, Discourse URL, API keys — is controlled by environment variables. No code changes needed to brand it for a new organisation.</p>
+
+        <div class="file-tree" style="margin-top: var(--space-4)">
+          <div class="ft-file">
+            <span class="ft-name">.env.example</span>
+            <span class="ft-desc">Copy this to .env and fill in your values — the full reference</span>
+          </div>
+          <div class="ft-file">
+            <span class="ft-name">app/app.config.ts</span>
+            <span class="ft-desc">Header image + sidebar logo — the two things that need build-time config</span>
+          </div>
+          <div class="ft-file">
+            <span class="ft-name">server/data/announcement.json</span>
+            <span class="ft-desc">Edit directly on GitHub to post a priority announcement — no deploy command needed</span>
+          </div>
+        </div>
+
+        <div class="quiz-container" id="quiz-module5" style="margin-top: var(--space-8)">
+          <div class="quiz-question-block"
+               data-correct="option-c"
+               data-explanation-right="Correct. v-if removes the element entirely — no API calls, no SSE processing, no DOM. It genuinely stops that panel from doing anything, which is more efficient than just hiding it with CSS."
+               data-explanation-wrong="Think about the difference between v-if and v-show. One hides, the other removes. Which is which?">
+            <h3 class="quiz-question">You turn off the Videos panel in the sidebar. The YouTube API route — does it still run?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" onclick="selectOption(this)">
+                <div class="quiz-option-radio"></div>
+                <span>Yes — the panel is hidden with CSS but the API call still happens in the background</span>
+              </button>
+              <button class="quiz-option" data-value="option-b" onclick="selectOption(this)">
+                <div class="quiz-option-radio"></div>
+                <span>Yes — SSE still pushes YouTube data to the browser, it just doesn't display it</span>
+              </button>
+              <button class="quiz-option" data-value="option-c" onclick="selectOption(this)">
+                <div class="quiz-option-radio"></div>
+                <span>No — the v-if removes the component entirely, so no API call fires and no SSE update is processed</span>
+              </button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+
+          <div class="quiz-question-block"
+               data-correct="option-b"
+               data-explanation-right="Right. You can fork the repo, set your org name, Discourse URL, and API key in Netlify's environment variables, and have a fully branded dashboard — without changing a single line of code."
+               data-explanation-wrong="Think about what environment variables are for — they separate configuration from code so the same code can run in different contexts.">
+            <h3 class="quiz-question">A new organisation wants to deploy this dashboard for their own community. What do they need to change in the code?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" onclick="selectOption(this)">
+                <div class="quiz-option-radio"></div>
+                <span>They need to edit the panel components to change the org name and links throughout</span>
+              </button>
+              <button class="quiz-option" data-value="option-b" onclick="selectOption(this)">
+                <div class="quiz-option-radio"></div>
+                <span>Nothing — they just set their own environment variables in Netlify and the same code works</span>
+              </button>
+              <button class="quiz-option" data-value="option-c" onclick="selectOption(this)">
+                <div class="quiz-option-radio"></div>
+                <span>They need to fork the code and rewrite the API routes for their specific services</span>
+              </button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+
+          <button class="quiz-check-btn" onclick="checkQuiz('quiz-module5')">Check Answers</button>
+          <button class="quiz-reset-btn" onclick="resetQuiz('quiz-module5')">Try Again</button>
+        </div>
+      </div>
+
+      <!-- ── Screen 7: What You Now Know ───────────────────────────── -->
+      <div class="module-screen">
+        <h3 class="screen-title">What you can do with this knowledge</h3>
+        <p>You've just learned the full architecture of a production-grade real-time web application. Here's how it makes you a better AI director:</p>
+
+        <div class="step-cards" style="margin-top: var(--space-6)">
+          <div class="step-card">
+            <div class="step-num">→</div>
+            <div class="step-body">
+              <strong>"Add a new panel for Mastodon"</strong>
+              <p>You know: create a new API route in server/api/, a new Vue component in app/components/panels/, add it to usePanelVisibility.ts, and wire up the SSE event in index.vue.</p>
+            </div>
+          </div>
+          <div class="step-card">
+            <div class="step-num">→</div>
+            <div class="step-body">
+              <strong>"The Discourse panel is slow"</strong>
+              <p>You know: check the cache TTL in discourse/latest.get.ts. Is it set too low? Is the Discourse server slow to respond? Is the cache being cleared too aggressively?</p>
+            </div>
+          </div>
+          <div class="step-card">
+            <div class="step-num">→</div>
+            <div class="step-body">
+              <strong>"Can we sync prefs across devices?"</strong>
+              <p>You know: right now preferences are in localStorage (per device). To sync, you'd need to store them server-side — either in Discourse user preferences or a simple database.</p>
+            </div>
+          </div>
+          <div class="step-card">
+            <div class="step-num">→</div>
+            <div class="step-body">
+              <strong>"Why does the live dot go grey sometimes?"</strong>
+              <p>You know: that's useSSEConnected() responding to an EventSource error. The browser auto-reconnects — but you could add a retry counter and alert if it fails more than N times.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="callout callout-accent" style="margin-top: var(--space-8)">
+          <div class="callout-icon">🎓</div>
+          <div class="callout-content">
+            <strong class="callout-title">You've covered a lot of ground</strong>
+            <p>SSR, SSE, in-memory caching, event bus broadcasting, REST APIs with bearer token auth, localStorage, v-if component lifecycle, lazy font loading, and zero-code configuration via environment variables. These aren't just features of this dashboard — they're patterns you'll find in almost every modern web application. You now know how to talk about all of them precisely.</p>
+          </div>
+        </div>
+      </div>
+
+    </section>
+  </main>
+
+</body>
+</html>

@@ -1,0 +1,205 @@
+    <section class="module" id="module-1">
+
+      <!-- ── Screen 1: The Problem ───────────────────────────────── -->
+      <div class="module-screen">
+        <div class="module-number">01</div>
+        <h2 class="module-title">Welcome to the Dashboard</h2>
+        <p class="module-subtitle">One place instead of six tabs</p>
+
+        <div class="icon-rows" style="margin-top: var(--space-8)">
+          <div class="icon-row">
+            <div class="icon-circle" style="background: var(--color-actor-1)">💬</div>
+            <div>
+              <strong>The problem</strong>
+              <p>Community organisations run their lives across Discourse forums, Matrix chat, a blog, YouTube, and Instagram — and everyone is checking 5–6 different tabs constantly.</p>
+            </div>
+          </div>
+          <div class="icon-row">
+            <div class="icon-circle" style="background: var(--color-actor-2)">🗂️</div>
+            <div>
+              <strong>The solution</strong>
+              <p>The Organiser Dashboard pulls all of those sources into one live-updating page. No switching tabs. No manual refreshes. Everything in one place.</p>
+            </div>
+          </div>
+          <div class="icon-row">
+            <div class="icon-circle" style="background: var(--color-actor-3)">🔓</div>
+            <div>
+              <strong>The philosophy</strong>
+              <p>Every service it talks to — Discourse, Matrix — is open-source and self-hostable. No vendor lock-in. Your data stays with you.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Screen 2: What You See ──────────────────────────────── -->
+      <div class="module-screen">
+        <h3 class="screen-title">Eight panels, three columns</h3>
+        <p>When you open the dashboard you see a three-column grid. Each "panel" is a live window into one data source. You can toggle any panel on or off — and your preferences are saved in your browser.</p>
+
+        <div class="pattern-cards" style="margin-top: var(--space-6)">
+          <div class="pattern-card" style="border-top: 3px solid var(--color-actor-1)">
+            <div class="pattern-icon" style="background: var(--color-actor-1)">📌</div>
+            <h4 class="pattern-title">Left Column</h4>
+            <p class="pattern-desc">Announcements, Chat (Matrix), Instagram</p>
+          </div>
+          <div class="pattern-card" style="border-top: 3px solid var(--color-actor-2)">
+            <div class="pattern-icon" style="background: var(--color-actor-2)">🗣️</div>
+            <h4 class="pattern-title">Centre Column</h4>
+            <p class="pattern-desc">Discussions — the main Discourse forum feed</p>
+          </div>
+          <div class="pattern-card" style="border-top: 3px solid var(--color-actor-3)">
+            <div class="pattern-icon" style="background: var(--color-actor-3)">📚</div>
+            <h4 class="pattern-title">Right Column</h4>
+            <p class="pattern-desc">Videos, Articles (RSS), Meetings, Key Docs</p>
+          </div>
+        </div>
+
+        <div class="callout callout-info" style="margin-top: var(--space-8)">
+          <div class="callout-icon">💡</div>
+          <div class="callout-content">
+            <strong class="callout-title">Why three columns?</strong>
+            <p>On desktop you see all three side-by-side. On mobile they stack. The CSS <span class="term" data-definition="A CSS property that controls the visual position of an element within a layout. Think of it like telling the browser 'put this piece here in the stack even though it appears here in the HTML.'">order</span> property controls which column appears first when stacked — by default, actionable content (Announcements, Chat) comes before the forum on mobile.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Screen 3: What Happens When You Open the URL ─────────── -->
+      <div class="module-screen">
+        <h3 class="screen-title">What happens in the first second</h3>
+        <p>Imagine you type the dashboard URL in your browser and hit Enter. Here is the exact chain of events — from your keystroke to the page appearing fully populated with data.</p>
+
+        <div class="step-cards" style="margin-top: var(--space-6)">
+          <div class="step-card">
+            <div class="step-num">1</div>
+            <div class="step-body">
+              <strong>Your browser sends a request to Netlify</strong>
+              <p>The URL resolves to a Netlify serverless function running the Nuxt server.</p>
+            </div>
+          </div>
+          <div class="step-card">
+            <div class="step-num">2</div>
+            <div class="step-body">
+              <strong>The server fetches all data in parallel</strong>
+              <p>The Nitro server calls Discourse, Matrix, YouTube, etc. simultaneously — not one after the other.</p>
+            </div>
+          </div>
+          <div class="step-card">
+            <div class="step-num">3</div>
+            <div class="step-body">
+              <strong>A complete HTML page arrives in your browser</strong>
+              <p>The server renders the full HTML — panels already populated — and sends it all at once. This is called <span class="term" data-definition="Server-Side Rendering: the server builds the full HTML page before sending it to the browser, so the user sees content immediately rather than waiting for JavaScript to load and then fetch data.">SSR</span>.</p>
+            </div>
+          </div>
+          <div class="step-card">
+            <div class="step-num">4</div>
+            <div class="step-body">
+              <strong>The browser opens a live channel</strong>
+              <p>After the page loads, JavaScript silently opens a <span class="term" data-definition="Server-Sent Events: a one-way channel where the server can push updates to the browser at any time, without the browser having to ask. Like a radio station broadcasting — the browser just listens.">SSE</span> connection to the server. From now on, the server pushes fresh data automatically.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Screen 4: The Data Flow Animation ──────────────────────── -->
+      <div class="module-screen">
+        <h3 class="screen-title">See it in motion</h3>
+        <p>Step through what happens when you first open the dashboard URL. Watch how the request travels from your browser to the server and back.</p>
+
+        <div class="flow-animation" data-steps='[
+          {"highlight":"flow-actor-1","label":"You type the URL and press Enter — your browser sends a GET request"},
+          {"highlight":"flow-actor-2","label":"Netlify receives the request and wakes up the Nuxt/Nitro server function","packet":true,"from":"actor-1","to":"actor-2"},
+          {"highlight":"flow-actor-3","label":"Nitro fires parallel fetches: Discourse, Matrix, YouTube, RSS all at once","packet":true,"from":"actor-2","to":"actor-3"},
+          {"highlight":"flow-actor-3","label":"Data arrives back from all sources and is cached in server memory"},
+          {"highlight":"flow-actor-2","label":"Nitro renders the complete HTML page with all panels already filled in"},
+          {"highlight":"flow-actor-1","label":"Your browser receives one complete HTML document — you see the full dashboard instantly","packet":true,"from":"actor-2","to":"actor-1"},
+          {"highlight":"flow-actor-1","label":"JavaScript opens the SSE channel — the dashboard is now live and self-updating"}
+        ]'>
+          <div class="flow-actors">
+            <div class="flow-actor" id="flow-actor-1">
+              <div class="flow-actor-icon">🌐</div>
+              <span>Your Browser</span>
+            </div>
+            <div class="flow-actor" id="flow-actor-2">
+              <div class="flow-actor-icon">⚡</div>
+              <span>Nitro Server</span>
+            </div>
+            <div class="flow-actor" id="flow-actor-3">
+              <div class="flow-actor-icon">🌍</div>
+              <span>External APIs</span>
+            </div>
+          </div>
+
+          <div class="flow-packet" id="flow-packet"></div>
+          <div class="flow-step-label" id="flow-label">Click "Next Step" to begin</div>
+
+          <div class="flow-controls">
+            <button class="btn flow-next-btn">Next Step</button>
+            <button class="btn flow-reset-btn">Restart</button>
+            <span class="flow-progress"></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Screen 5: Quiz ─────────────────────────────────────────── -->
+      <div class="module-screen">
+        <h3 class="screen-title">Check your understanding</h3>
+
+        <div class="quiz-container" id="quiz-module1">
+          <div class="quiz-question-block"
+               data-correct="option-c"
+               data-explanation-right="Exactly. SSR means the server does the work of populating the page before sending it — so the browser receives fully-formed content, not a blank shell."
+               data-explanation-wrong="Close, but think about timing: when does the data get added to the page — before or after the HTML arrives in your browser?">
+            <h3 class="quiz-question">The dashboard uses SSR (Server-Side Rendering). What does that mean for the user experience?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" onclick="selectOption(this)">
+                <div class="quiz-option-radio"></div>
+                <span>The browser downloads JavaScript first, then fetches data — you see a loading spinner initially</span>
+              </button>
+              <button class="quiz-option" data-value="option-b" onclick="selectOption(this)">
+                <div class="quiz-option-radio"></div>
+                <span>The page only works when the user has a fast internet connection</span>
+              </button>
+              <button class="quiz-option" data-value="option-c" onclick="selectOption(this)">
+                <div class="quiz-option-radio"></div>
+                <span>The server fetches data and builds the full HTML page before sending anything — panels are populated the moment the page arrives</span>
+              </button>
+              <button class="quiz-option" data-value="option-d" onclick="selectOption(this)">
+                <div class="quiz-option-radio"></div>
+                <span>The server stores a pre-built HTML file and serves the same one to everyone</span>
+              </button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+
+          <div class="quiz-question-block"
+               data-correct="option-b"
+               data-explanation-right="Correct. SSE is a one-way push channel — the server broadcasts data to the browser whenever it has something new. The browser never has to ask."
+               data-explanation-wrong="Not quite. Think about who initiates the communication after the SSE channel is open — the browser, or the server?">
+            <h3 class="quiz-question">After the page loads, the dashboard opens an SSE (Server-Sent Events) connection. What does this do?</h3>
+            <div class="quiz-options">
+              <button class="quiz-option" data-value="option-a" onclick="selectOption(this)">
+                <div class="quiz-option-radio"></div>
+                <span>The browser checks the server for new data every 30 seconds</span>
+              </button>
+              <button class="quiz-option" data-value="option-b" onclick="selectOption(this)">
+                <div class="quiz-option-radio"></div>
+                <span>The server can push fresh data to the browser at any time — panels update themselves without any user action</span>
+              </button>
+              <button class="quiz-option" data-value="option-c" onclick="selectOption(this)">
+                <div class="quiz-option-radio"></div>
+                <span>The browser and server can chat back and forth in real time, like a phone call</span>
+              </button>
+              <button class="quiz-option" data-value="option-d" onclick="selectOption(this)">
+                <div class="quiz-option-radio"></div>
+                <span>The user gets a notification when someone posts to the forum</span>
+              </button>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+
+          <button class="quiz-check-btn" onclick="checkQuiz('quiz-module1')">Check Answers</button>
+          <button class="quiz-reset-btn" onclick="resetQuiz('quiz-module1')">Try Again</button>
+        </div>
+      </div>
+
+    </section>
